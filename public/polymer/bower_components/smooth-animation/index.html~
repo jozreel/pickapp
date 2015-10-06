@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>neon-animated-pages demo: card</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+
+    <link rel="import" href="smooth-animation.html">
+    
+
+    <style>
+      body {
+        padding: 15px;
+      }
+      neon-animated-pages {
+        height: 100%;
+      }
+      .large {
+        width: 100%
+      }
+      .button {
+        text-align: center;
+        width: 120px;
+        height: 32px;
+        line-height: 32px;
+        border-radius: 2px;
+        font-size: 0.9em;
+        background-color: #fff;
+        color: #646464;
+      }
+      .button.blue {
+        background-color: #4285f4;
+        color: #fff;
+      }
+      .button.raised {
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+      }
+      .button.back {
+        position: fixed;
+        top: 30px;
+        left: 30px;
+      }
+    </style>
+
+  </head>
+  <body class="fullbleed">
+    <button id="btn">blar</button>
+    <smooth-animation id="ra"> </smooth-animation>
+<script>
+  var ele = document.getElementById('ra');
+   ele.element =document.getElementById('btn');
+  ele.pages=['bla bla bla bla', 'bla gaga gaga gaga'];
+ 
+ </script>
+  </body>
+</html>

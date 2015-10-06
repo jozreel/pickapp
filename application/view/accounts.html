@@ -1,0 +1,215 @@
+<html>
+  <head>
+    <title>paper-radio-group demo</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <script src="polymer/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="polymer/bower_components/paper-radio-button/paper-radio-button.html">
+    <link rel="import" href="polymer/bower_components/paper-radio-group/paper-radio-group.html">
+    <link rel="import" href="polymer/bower_components/paper-toolbar/paper-toolbar.html"> 
+      <link rel="import" href="polymer/bower_components/iron-form/iron-form.html">
+        <link rel="import" href="polymer/bower_components/paper-material/paper-material.html"> 
+           <link rel="import" href="polymer/bower_components/paper-input/paper-input.html">
+              <link rel="import" href="polymer/bower_components/drop-down/drop-down.html">
+                 <link rel="import" href="polymer/bower_components/paper-fab/paper-fab.html">
+                    <link rel="import" href="polymer/bower_components/paper-table-simple/paper-table-simple.html">
+                       <link rel="import" href="polymer/bower_components/ajax-parser/ajax-parser.html">
+                         <link rel="import" href="polymer/bower_components/paper-toast/paper-toast.html">
+                             <link rel="import" href="polymer/bower_components/paper-header-panel/paper-header-panel.html">
+                                <link rel="import" href="polymer/bower_components/ajax-parser/ajax-req.html">
+                                 <link rel="import"  href="style/element-styles.html"> 
+      <link rel="stylesheet" href="style/base.css"> 
+        <script src="js/sajax.js" type="text/javascript"></script>
+          <script type="text/javascript">
+            
+   function popcat(rs)
+   {
+  var arr = Array();
+ //console.log(rs);
+  for(var o in rs)
+  {
+    var jct  = {text:decodeURI(rs[o].categorydescription), value:decodeURI(rs[o].categoryno)};
+    arr.push(jct);
+  }
+  document.getElementById('cat').dinfo=arr;
+  document.querySelector('#ma').dataurl="/accounts/masteraccounts";
+  document.querySelector('#ma').respfunc=popma;
+}
+</script>
+      </head>
+
+  <body>
+  
+    <div id='spinner' class="spin"><img src="image/fb.gif" />
+    <p>loading...</p>
+    </div>
+    <div class="hidden" id="cont"> 
+     <paper-header-panel mode="waterfall-tall" tall-class="medium-tall" class="orange">
+    <div class="paper-header">
+      
+  
+          <paper-toolbar class="orange" style="background:#ffc107;">
+           <paper-button icon="more-vert" on-tap="moreAction" class="logo">Bootik</paper-button> 
+          </paper-toolbar>  
+        <span>hpophjjoj</span>
+    </div>
+ <div class="content">
+ <div class="content_holder-large">
+    <div class="formholder" id="fh">
+     <ajax-req dataurl="/accounts/categories"  id="ajcat"></ajax-req>
+      <ajax-req   id="ma"></ajax-req>
+     <ajax-parser method="POST" id="ajp"></ajax-parser>
+        <paper-material style="padding:15px 15px 80px 15px;">
+          <h3>Account %accno%</h3>
+       
+         <form id="form" method="post" enctype="multipart/form-data" action="/inventory/passdata">
+           <fieldset id="fset" disabled style="border:none; margin:0; padding:0;" >
+            <input type="hidden" name ="event" id ="ev" />
+             <drop-down title="GL Account Type"  color="black" background="#ffecb3" name="gltype" id="gltype" disabled="true" selectedtext="Ballance Sheet Account"></drop-down>
+             <drop-down title="Account Category"  color="black" background="#ffecb3" name="cat" id="cat" disabled selectedindex="1"></drop-down>
+             
+          <paper-radio-group selected="debit" name="rgroup" id="type" >
+            <paper-radio-button name="debit" disabled>This account ballance increases on debit</paper-radio-button>
+            <paper-radio-button name="credit" disabled>This account ballance increases on credit</paper-radio-button>
+          </paper-radio-group>
+          <paper-input label="Account Name" name="accountname" ></paper-input>
+           <paper-input label="Account Description" name="accountdescription"></paper-input>
+           <paper-input label="Account Number" name="accountno"></paper-input>
+          
+           <drop-down title="Master Account"  color="black" background="#ffecb3" name="master" id ="master" disabled selectedindex="1"></drop-down>
+           </fieldset>
+           <paper-button style="margin-top:40px;" disabled raised onclick="submitFrom()">SUBMIT</paper-button>
+           <paper-fab icon="add" style="float:right; margin-top:40px;" class="orange" onclick="setEvent('A')"></paper-fab>
+         </form>
+         
+         
+         </paper-material>
+    </div>
+    <div class="gd">
+       <div id="list1">
+    <paper-toolbar style="background:#ffecb3; color: #000;">
+    <paper-icon-button icon="view-stream" onclick="wview(event)"></paper-icon-button>
+     <paper-icon-button icon="list" onclick="aview(event)"></paper-icon-button>
+     <paper-icon-button icon="select-all" onclick="setselectioinmode(event)" id="select"></paper-icon-button>
+     
+     
+      <div class="flex"><div class="bottom title">Accounts</div></div>
+         <paper-input class="input-hidden" id="search" onkeypress="return search(event)"></paper-input>
+        <paper-icon-item>
+       
+      <paper-icon-button icon="search" onclick="displaySearch()"></paper-icon-button>
+      </paper-icon-item>
+      
+      
+    </paper-toolbar>
+    </div>
+      <paper-table-simple  id="ptbm"></paper-table-simple>
+    </div>
+ </div>
+ <paper-toast id="ptoast" class="toast"></paper-toast>
+  
+  </div>
+ </paper-header-panel>
+</div>
+  
+<script>
+  
+  window.addEventListener('WebComponentsReady', function(){document.querySelector('#spinner').style.display='none';
+document.querySelector('#cont').style.display='block';
+
+ //alert('bong');'
+ }); 
+  document.querySelector('#ajcat').respfunc=popcat;
+ 
+  function resp(str)
+{
+   
+   if(str.success===true)
+      document.querySelector('#ptoast').innerHTML ='<p style="color:green;">Sucess item added</p>';
+     else
+       document.querySelector('#ptoast').innerHTML =str.error;
+       document.querySelector('#ptoast').show();
+}
+
+
+
+function popma(rs)
+{
+  var arr = Array();
+ //console.log(rs);
+  for(var o in rs)
+  {
+    
+    var jct  = {text:decodeURI(rs[o].accountname), value:decodeURI(rs[o].accountno)};
+    arr.push(jct);
+  }
+  document.getElementById('master').dinfo=arr;
+   document.getElementById('gltype').dinfo = [{text:'Ballance Sheet Account', value:'BS'}, {text:'Income Statement Account', value:'IS'}];
+  
+   var tblm = document.getElementById('ptbm');
+ tblm.headers=[{name:'accountname', desc:'Account Name'}, {name:'accountdesc',desc:'Account Description'},{name:'accountno',desc:'Account Number'}, { name:'accountcategory', desc: 'Account Description'},{name:'master', desc:'Master Account'},{name:'accounttype', desc:'Account Type'}];
+ tblm.dataurl="/accounts/accounts";
+}
+
+
+function setEvent(ev)
+{
+  document.getElementById('ev').value=ev;
+  disableForm('form', false);
+}
+function submitFrom()
+{
+  var frm = document.getElementById('form');
+ var ajp = document.getElementById('ajp');
+  var name = frm.querySelector('input[name="accountname"]').value;
+  var desc = frm.querySelector('input[name="accountdescription"]').value;
+  var no = frm.querySelector('input[name="accountno"]').value;
+  var master = frm.querySelector('#master').value;
+  var cat = frm.querySelector('#cat').value;
+  var atype = frm.querySelector('#type').selected;
+  var event = frm.querySelector('input[name="event"]').value;
+  var bat = frm.querySelector('#gltype').value;
+  
+  ajp.jsonstring = '{"cat":"'+cat+'", "accdesc":"'+desc+'", "accname":"'+name+'", "accno":"'+no+'", "master":"'+master+'", "ismaster":"false", "event":"'+event+'", "acctype":"'+atype+'"}';
+  ajp.respfunc = resp;
+  ajp. jsonurl="/accounts/passdata/";
+ 
+  ajp.submit=true 
+  //console.log('val',bat);
+}
+
+
+function disableForm(fid, boolval)
+{
+  var elms =['paper-radio-group','fieldset'];
+  if(typeof fid ==='string')
+     var fm = document.getElementById(fid);
+  else fm=fid;
+  fm.disabled = boolval;
+ 
+  var arch = fm.childNodes;
+ // console.log(arch);
+ var i=1;
+  for(var it in arch)
+   {
+     
+     if(arch[it].tagName !== undefined)
+     {
+     if(elms.indexOf(arch[it].tagName.toLowerCase()) != -1)
+        {
+          
+          disableForm(arch[it])
+        }
+    
+      arch[it].disabled=boolval;
+        
+   }
+   }
+}
+</script>
+  </body>
+</html>

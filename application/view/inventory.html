@@ -1,0 +1,297 @@
+<html>
+<head>
+<meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+ <title>%title%</title>
+ <script src="polymer/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<link rel="import" href="polymer/bower_components/paper-styles/color.html">
+    <link rel="import" href="polymer/bower_components/drop-down/drop-down.html">
+  <link rel="import" href="polymer/bower_components/iron-icons/iron-icons.html">
+  <link rel="import" href="polymer/bower_components/paper-icon-button/paper-icon-button.html"> 
+ <link rel="import" href="polymer/bower_components/paper-toolbar/paper-toolbar.html"> 
+  <link rel="import" href="polymer/bower_components/paper-material/paper-material.html"> 
+
+ <link rel="import" href="polymer/bower_components/iron-form/iron-form.html">
+ <link rel="import" href="polymer/bower_components/paper-button/paper-button.html">
+   <link rel="import" href="polymer/bower_components/paper-input/paper-input.html">
+     <link rel="import" href="polymer/bower_components/paper-icon-button/paper-icon-button.html"> 
+          <link rel="import" href="polymer/bower_components/iron-image/iron-image.html">
+           
+                <link rel="import" href="polymer/bower_components/paper-fab/paper-fab.html">
+            <link rel="import" href="polymer/bower_components/fancy-listview/fancy-listview.html">
+               <link rel="import" href="polymer/bower_components/ajax-parser/ajax-parser.html">
+                 <link rel="import" href="polymer/bower_components/paper-toast/paper-toast.html">
+                    <link rel="import" href="polymer/bower_components/paper-input/paper-textarea.html">
+     <link rel="import" href="polymer/bower_components/neon-animation/neon-animations.html">
+        <link rel="import" href="polymer/bower_components/paper-styles/paper-styles.html">
+    <link rel="import" href="polymer/bower_components/neon-animation/neon-animated-pages.html">
+    <link rel="import" href="polymer/bower_components/neon-animation/neon-animations.html">
+    <link rel="import" href="polymer/bower_components/paper-table-simple/paper-table-simple.html">
+        <link rel="import" href="polymer/bower_components/file-select/file-select.html">
+         <link rel="import" href="polymer/bower_components/paper-header-panel/paper-header-panel.html">
+          <link rel="import" href="polymer/bower_components/top-panel/top-panel.html">
+          <link rel="import" href="polymer/bower_components/paper-dialog/paper-dialog.html">
+<link rel="stylesheet" href="style/base.css">
+  <link rel="import"  href="style/element-styles.html"> 
+  <script src="js/sajax.js"></script>
+  <script src="js/bootik.js"></script>
+</head>
+  <body>
+    <div id='spinner' class="spin"><img src="image/fb.gif" />
+    <p>loading...</p>
+    </div>
+ <div class="hidden" id="cont"> 
+<paper-header-panel mode="waterfall-tall" tall-class="medium-tall" class="orange">
+    <div class="paper-header">
+  <paper-toolbar class="standard" style="background:#ffc107;">
+    <paper-button icon="more-vert" on-tap="moreAction" class="logo">Bootik</paper-button> 
+  </paper-toolbar>
+  <div class= "topnav"><div><span>Accounts</span>  
+  <span>Inventory</span>
+  <span>Users</span>  
+   <span>Reports</span>
+    <span>about</span>  
+  </div>
+  </div>
+   </div>
+   <div class="content">
+  <div class="content_holder-large">
+    <div class="formholder" id="fh">
+      <paper-material elevation="1" style="padding:20px;">
+    <form id="form" method="post" enctype="multipart/form-data" action="/inventory/passdata">
+      <fieldset disabled="true" style="border:none; margin:0; padding:0;" id="fldset">
+   <input type="hidden" id="_id"; name="_id" />
+   <input type="hidden" id="ev"; name="event" />
+  <paper-textarea  name="desc" label="description" id="desc"></paper-textarea>
+  <paper-input name="name" label="Name" id="name"></paper-input>
+ <paper-input name="sku" label="sku" id="sku"></paper-input>
+   <div class="flinpt">
+   <file-select name="image" id="fimg" disabled="true"></file-select>
+  </div>
+  <div>
+     <p>category</p>
+     <drop-down background="#ffecb3" color= "#000" style="width:100%; margin-right:0px;" title="CATEGORY" selectedindex="0" disabled id="cat"></drop-down>
+     </div>
+   <paper-input name="serial" label="serial" id="serial"></paper-input>
+   <paper-input name="model" label="model" id="model"></paper-input>
+    <paper-input name="manu" label="manufacturer" id="manu"></paper-input>
+    
+    <div>
+   <p>unit</p>
+     <drop-down id="unit" disabled background="#ffecb3" color= "#000" title="UNIT" selectedindex="0"></drop-down>
+   
+  </div>
+  
+    <paper-input name="uprice" label="unit price" id="uprice"></paper-input>
+
+  
+  
+   <!--<input type="submit" value="test" /> -->
+     
+     </fieldset>
+</form>
+ <paper-button raised onclick="submitForm()" id="sub">Submit</paper-button>
+   <paper-button raised onclick="clearAll()" id="clear">Clear</paper-button>
+    <paper-button raised onclick="setev('E')" id="mod">Edit</paper-button>
+     <paper-button raised onclick="deletecall()" id="del">Delete</paper-button>
+     <paper-fab icon="add" style="float:right;" class="orange" onclick="setev('A')"></paper-fab>
+</paper-material>
+<!--<iron-ajax  content-type = "application/json"  id = 'iaj' method='POST' url ="/inventory/passdata/"  debounce-duration='300' on-response="handleResp">-->
+<ajax-parser jsonurl="/inventory/passdata/" method="POST" id="ajp"></ajax-parser>
+<ajax-parser jsonurl="/inventory/delete/" method="POST" id="ajpdel"></ajax-parser>
+<!--<iron-ajax  id = 'iaj' method='POST' url ="/inventory/passdata/"  debounce-duration='300'> 
+</iron-ajax> -->
+</div>
+
+<!-- holder fodr content-->
+<div class="gd">
+ <paper-material elevation="1" style="padding:5px; width:100%; height:720px; overflow:hidden;">
+ <paper-scroll-header-panel class="flex" >
+<div style="height:730px;">
+ <div id="list1">
+   <top-panel id="tpanel">
+   </top-panel>
+ <!--   <paper-toolbar style="background:#ffecb3; color: #000;">
+    <paper-icon-button icon="view-stream" onclick="wview(event)"></paper-icon-button>
+     <paper-icon-button icon="list" onclick="aview(event)"></paper-icon-button>
+     <paper-icon-button icon="select-all" onclick="setselectioinmode(event)" id="select"></paper-icon-button>
+     
+     
+      <div class="flex"><div class="bottom title">Inventory of items in stock</div></div>
+         <paper-input class="input-hidden" id="search" onkeypress="return search(event)"></paper-input>
+        <paper-icon-item>
+       
+      <paper-icon-button icon="search" onclick="displaySearch()"></paper-icon-button>
+      </paper-icon-item>
+      
+      
+    </paper-toolbar>-->
+    </div>
+ <neon-animated-pages id="pages" class="flex" selected="0" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+ <neon-animatable onclick>
+ <div class="scontent">
+
+      <fancy-listview size="100" id="listcontent" dataurl="/inventory/viewall"></fancy-listview>
+
+    </div>
+    </neon-animatable>
+    
+    <neon-animatable><div>
+      <paper-table-simple id="tbl" dataurl="/inventory/viewall" ></paper-table-simple>
+    </div></neon-animatable>
+  </div>
+  </paper-scroll-header-panel>   
+</paper-material>
+ </div>
+</div>
+ </div>
+ <paper-toast id="ptoast" class="toast"></paper-toast>
+ </paper-header-panel> 
+ 
+ <paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation" id ='pd'>
+  <h2>ARE YOU SURE</h2>
+  <paper-dialog-scrollable>
+   Are you sure you want to delete
+  </paper-dialog-scrollable>
+  <div class="buttons">
+    <paper-button dialog-dismiss>Cancel</paper-button>
+    <paper-button dialog-confirm onclick ="gothrough()">Accept</paper-button>
+  </div>
+</paper-dialog>
+ 
+</div>
+ <script>
+  
+  
+    disablebuttons(true);
+    var lc = document.getElementById("listcontent");
+    var tbl = document.getElementById('tbl');
+   tbl.headers=[{name:'name', desc:'name'}, {name:'manu',desc:"Manufacturer"}, {name:'desc', desc:'description'},{name:'model',desc:"Model"},{name:'image',desc:"Image"},{name:'sku',desc:"SKU"},{name:'serial',desc:"Serial"},{name:'unit',desc:"Unit"}];
+  
+     var reader = new FileReader();
+    
+   document.querySelector('#listcontent').hide = ['_id', 'name'];
+    document.querySelector('#listcontent').textidentifier = 'name';
+   document.querySelector('#listcontent').descriptivetext = {desc:'Description'};
+   document.querySelector('#tpanel').displayobjects= [document.getElementById('listcontent'), document.getElementById('tbl')];
+   document.querySelector('#tpanel').searchurl = "/inventory/search/";
+   document.querySelector('#tpanel').pagesd =document.getElementById('pages');
+      var listd = document.getElementById('list');
+    
+   function setev(evnt)
+   {
+     
+    var ev = document.getElementById('ev');
+    if(evnt === "E")
+     sajax('#sub').disable(false);
+    ev.value = evnt;
+     enableedit(false)
+   }
+   
+   
+   function submitForm()
+   {
+         if(document.getElementById("fimg").value ==='IMAGE' ||document.getElementById("fimg").value ===null)
+         {
+           parseData(document.getElementById('ajp'), sajax('#form').serializeForm(true));
+         }
+         else
+           sajax().loadImage(document.getElementById("fimg"),'An Image', funct,true);
+       
+    
+    }
+    
+  
+   function funct(obj)
+    {
+        var theval =  sajax('#form').serializeForm(true);   
+         var tv = JSON.parse(theval);
+        tv.image =  obj;
+        parseData(document.getElementById('ajp'), JSON.stringify(tv));
+      
+    }
+   function parseData(apaser,str)
+   {
+            // iaj.body = str;
+      
+       // iaj.generateRequest();
+        
+         document.querySelector('#ajp').jsonstring = str;
+         document.querySelector('#ajp').rspelement  = document.getElementById("ptoast");
+         
+         document.querySelector('#ajp').respfunc=resp;
+         document.querySelector('#ajp').submit=true;
+         
+         
+        // alert(str);
+       // apaser.jsonstring = str;
+       // apaser.submit = true;
+   }
+
+   function populate(obj)
+   {
+    // clearAll();
+    // var fdata = new FormData(form);
+   // enableedit(false);
+      //console.log(obj.model);
+      document.getElementById("desc").value =obj.desc;
+       document.getElementById("name").value =obj.name;
+       document.getElementById("serial").value =obj.serial;
+        document.getElementById("model").value =obj.model;
+       document.getElementById("manu").value =obj.manu;
+       document.getElementById("fimg").value = obj.image;
+      document.getElementById("sku").value =obj.sku; 
+       document.getElementById("uprice").value = obj.uprice;
+       // document.getElementById("unit").title = obj.unit;
+        document.getElementById("cat").value = obj.cat;
+         document.getElementById("_id").value = obj._id;
+         //alert(obj._id);
+      //  enableedit(true);
+      sajax('#mod').disable(false);
+      sajax('#del').disable(false);
+       
+
+       
+   }
+   
+function enableedit(val)
+{
+  sajax('#fldset').disableFields(val);
+  
+}
+function clearAll()
+{
+  sajax('#form').clearForm();
+}
+function sayit() {
+} 
+
+function deletecall()
+{       
+       document.getElementById('pd').open();
+       
+}
+
+function gothrough()
+{
+  
+  deleteobj(document.getElementById('ajpdel'));  
+}
+
+function disablebuttons()
+{
+  sajax('#sub').disable(true);
+   sajax('#del').disable(true);
+    sajax('#mod').disable(true);
+}
+window.addEventListener('WebComponentsReady', function(){document.querySelector('#spinner').style.display='none';
+document.querySelector('#cont').style.display='block';
+
+ }); 
+</script>
+
+</body>
+</html>
+ 
+ 

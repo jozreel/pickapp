@@ -1,0 +1,63 @@
+
+
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../neon-shared-element-animatable-behavior.html">
+
+<dom-module id="page-cards-list">
+  <style>
+    :host {
+      display: block;
+      overflow: hidden;
+    }
+    #placeholder {
+      opacity: 0;
+      background-color: grey;
+    }
+  </style>
+  <template>
+
+    <div id="placeholder" class="fit"></div>
+
+    <div id="container">
+      <content select="div"></content>
+    </div>
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+    is: 'page-cards-list',
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+    properties: {
+      animationConfig: {
+        value: function() {
+          return {
+            'entry': [{
+              name: 'reverse-ripple-animation',
+              id: 'reverse-ripple',
+              toPage: this
+            }],
+            'exit': [{
+              name: 'fade-out-animation',
+              node: this.$.container,
+              timing: {
+                delay: 150,
+                duration: 0
+              }
+            }, {
+              name: 'ripple-animation',
+              id: 'ripple',
+              fromPage: this
+            }]
+          };
+        }
+      }
+    }
+  });
+})();
+</script>
+

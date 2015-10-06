@@ -1,0 +1,87 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
+
+<dom-module id="page-card">
+  <style>
+    :host {
+      display: block;
+      overflow: hidden;
+    }
+    #placeholder {
+      opacity: 0; padding:0;
+      background-color: grey;  
+    }
+  </style>
+  <template>
+  <div id="fpg">
+    <div id="placeholder" class="fit" style="z-index:-100;"></div>
+
+    <div id="container">
+      <content select="div"></content>
+    </div>
+<div>
+  </template>
+</dom-module>
+
+<script>
+(function() { console.log(this);
+  Polymer({
+    is: 'page-card',
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+    properties: {
+      animationConfig: {
+        value: function() {
+          return {
+            'entry': [{
+              name: 'ripple-animation',
+              id: 'ripple',
+              toPage: this
+            }, {
+              name: 'fade-out-animation',
+              node: this.$.placeholder,
+              timing: {
+                delay: 250
+              }
+            }, {
+              name: 'fade-in-animation',
+              node: this.$.container,
+              timing: {
+                delay: 50
+              }
+            }],
+            'exit': [{
+              name: 'opaque-animation',
+              node: this.$.placeholder
+            }, {
+              name: 'fade-out-animation',
+              node: this.$.container,
+              timing: {
+                duration: 0
+              }
+            },{
+              name: 'reverse-ripple-animation',
+              id: 'reverse-ripple',
+              fromPage: this,
+              timing: {
+                duration: 250
+              }
+            }
+            ]
+          };
+        }
+      },
+      sharedElements: {
+        value: function() {
+          return {
+            'ripple': this.$.placeholder,
+            'reverse-ripple': this.$.placeholder
+          };
+        }
+      }
+    }
+  });
+})();
+</script>

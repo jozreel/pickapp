@@ -1,0 +1,86 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
+
+
+<dom-module id="content-card">
+
+
+
+  <style>
+    :host {
+      display: block;
+    }
+    .fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+    }
+    .card {
+      position: relative;
+      margin: 200px 100px 0;
+      height: 700px;
+    }
+  </style>
+
+  <template>
+
+    <div id="fixed" " style="background:grey; height:100%;" ></div>
+
+    <div id="card" style="background:grey; height:100%"></div>
+
+  </template>
+
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'content-card',
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+    properties: {
+      color: {
+        type: String
+      },
+      sharedElements: {
+        type: Object,
+        value: function() {
+          return {
+            'hero': this.$.card,
+            'ripple': this.$.fixed
+          }
+        }
+      },
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': [{
+              name: 'ripple-animation',
+              id: 'ripple',
+              toPage: this,
+            }, {
+              name: 'hero-animation',
+              id: 'hero',
+              toPage: this,
+              timing: {
+                delay: 150
+              }
+            }],
+            'exit': [{
+              name: 'fade-out-animation',
+              node: this.$.fixed
+            }, {
+              name: 'transform-animation',
+              transformFrom: 'none',
+              transformTo: 'translate(0px,-200vh) scale(0.9,1)',
+              node: this.$.card
+            }]
+          }
+        }
+      }
+    }
+  });
+</script>

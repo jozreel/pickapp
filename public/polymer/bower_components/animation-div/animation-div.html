@@ -1,0 +1,56 @@
+
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
+
+<dom-module id="animation-div">
+  <style>
+    :host {
+      display: block;
+      overflow: hidden;
+    }
+    #placeholder {
+      opacity: 0;
+      background-color: transparent;
+    }
+  </style>
+  <template>
+
+    <div id="placeholder" class="fit" style="z-index:-1000"></div>
+
+    <div id="container">
+      <content select="div"></content>
+    </div>
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+    is: 'animation-div',
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+    properties: {
+      animationConfig: {
+        value: function() {
+          return {
+            'exit': [{
+             name: 'ripple-animation',
+              id: 'ripple',
+              fromPage: this
+            }, {
+              name: 'hero-animation',
+              id: 'hero',
+              fromPage: this
+            }
+            ]
+          };
+        }
+      }
+    }
+  });
+})();
+</script>
+

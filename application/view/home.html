@@ -1,0 +1,51 @@
+<style>
+  body{margin: 0; padding: 0;}
+  
+  paper-header-panel {
+    border: 1px solid gray; background: black;
+  --paper-header-panel-shadow: {
+      height: 6px;
+      bottom: -6px;
+      box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+     
+  };
+   background:#2196f3;
+   height:600px;
+  }
+}
+
+
+</style>
+
+<script src="polymer/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+ <link rel="import" href="polymer/bower_components/paper-toolbar/paper-toolbar.html"> </link>
+  <link rel="import" href="polymer/bower_components/paper-material/paper-material.html"> </link>
+<link rel="import" href="polymer/bower_components/paper-icon-button/paper-icon-button.html"> </link>
+    <link rel="import" href="polymer/bower_components/drop-down/drop-down.html">
+<link rel="stylesheet" href="style/base.css"> </link>
+  <body class="fullbleed layout vertical">
+    
+     
+  <div class="header_panel">
+  
+    <div style="height:250px;">
+  <paper-toolbar class="tall" style="background:transparent;  height:250px;">
+    <core-icon-button icon="menu"></core-icon-button>
+  </paper-toolbar>
+ </div>
+  <div class="content"></div>
+  <div class="content_holder">
+    <paper-material elevation="1">
+    <div class="holder">
+      <h1>Simple Server</h1>
+    {name}
+
+    {value}
+  </div>
+   
+</paper-material>
+  </div>
+ </div>
+</body>
+ 
+ 

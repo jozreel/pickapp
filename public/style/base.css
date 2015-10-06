@@ -1,0 +1,74 @@
+body{margin: 0; padding: 0;}
+.header_panel{background: url("../image/head.jpg");  background-size: cover;  width: 100%; height: 600px; position: absolute; top: 0px;}
+.content_holder{width: 1024px; height:800px;  margin: auto; z-index: 100;}
+.holder{width: 100%; height: 100%; margin:0px 0px 0px 0px; background: #fff; padding: 20px 10px 10px 10px;}
+.content_holder-large{width: 1607px; height:800px;  margin: auto; z-index: 100;}
+.formholder{width: 500px;min-height: 500px;  float:  left; position: relative;}
+.scontent{height: 655px;  overflow-y: scroll; overflow-x: hidden;}
+
+.dd{margin-top: 5px;}
+ 
+ .horizontal-section {
+    background-color: white;
+    padding: 24px;
+    margin-right: 24px;
+    min-width: 200px;
+
+    @apply(--shadow-elevation-2dp);
+  }
+  @font-face {
+  font-family: 'Lobster';
+
+  src: url('/fonts/Lobster/Lobster-Regular.ttf');
+  }
+ .dropdown-content{
+     
+      background-color: #fff;
+      box-shadow: 0px 2px 6px #ccc;
+      margin: 0.15em 0;
+      padding: 0.25em;
+      border-radius: 3px;
+      position: absolute;
+     
+    
+ }
+ 
+ .topnav{width:1607px; margin:0 auto;}
+ .topright div{padding-left: 10px; border-left: 1px solid #fff;  height: 100%; display: inline;}
+ .topright>div:first-of-type{padding-left: 0; border-left: none;}
+  .dropdown-content li{
+     height: 22px;
+     
+     display:block;
+      
+    
+ }
+ .topright{float: right;}
+ .dropdown{width:470px;}
+ .dd{padding:0; margin:0; width:100%;}
+
+ 
+    iron-image {
+      padding: 1em;
+      background-color: #fff;
+      box-shadow: 0px 2px 6px #ccc;
+      border-radius: 3px;
+    }
+    
+    .gd{width:1100px; float: right; height: 100%;}
+    .toast{width: 100%; text-align: center;}
+    .input-hidden{display: none; padding-bottom: 20px;}
+    .logo{font-family: Lobster; font-size: 16pt;}
+   
+      .hidden {
+        display: none;
+      }
+      
+      .spin{margin: 0 auto; width: 100%; height:100%; opacity: 0.7; background: black; padding-top: 400px; text-align: center;}
+      .occupy{width: 1170px; height: 100%; margin-left: 10px; float: right;}
+      .occupy paper-material{height: 100%; background: white;}
+      .occupy google-chart{width: 400px; height: 350px;}
+      .chart{width:400px; height:350px; margin: 10px; padding: 0; position: relative; overflow: hidden; display: block; float: left;}
+   
+  
+    

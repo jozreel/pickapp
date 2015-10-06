@@ -1,0 +1,202 @@
+
+    
+ <style is="custom-style">
+ #ddwn{width:470px !important;}
+ 
+  
+  .flinpt input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+ paper-fab{display: block;}
+ 
+ paper-fab.blue {--paper-fab-background: var(--paper-light-blue-500); 
+      --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+    }
+    
+   paper-fab.orange {--paper-fab-background: var(--paper-orange-500); 
+      --paper-fab-keyboard-focus-background: var(--paper-orange-900);
+      color:gray;
+    }
+   
+  paper-input.input-hidden{ --paper-input-container-input-color: #ffffff; --paper-input-container-focus-color: #ffffff; --paper-input-container-color: #FAFAFA;}
+   
+   neon-animated-pages {
+        height: 100%;
+      }
+      
+      .horizontal-section {
+        min-width: 200px;
+      }
+      paper-radio-button.blue {
+        --paper-radio-button-checked-color: var(--paper-light-blue-500);
+        --paper-radio-button-checked-ink-color: var(--paper-light-blue-500);
+        --paper-radio-button-unchecked-color: var(--paper-light-blue-900);
+        --paper-radio-button-unchecked-ink-color: var(--paper-light-blue-900);
+      }
+      paper-radio-button.red {
+        --paper-radio-button-checked-color: var(--paper-red-500);
+        --paper-radio-button-checked-ink-color: var(--paper-red-500);
+        --paper-radio-button-unchecked-color: var(--paper-red-900);
+        --paper-radio-button-unchecked-ink-color: var(--paper-red-900);
+      }
+      paper-radio-button.green {
+        --paper-radio-button-checked-color: var(--paper-green-500);
+        --paper-radio-button-checked-ink-color: var(--paper-green-500);
+        --paper-radio-button-unchecked-color: var(--paper-green-900);
+        --paper-radio-button-unchecked-ink-color: var(--paper-green-900);
+      }
+      paper-radio-button.orange {
+        --paper-radio-button-checked-color: var(--paper-orange-500);
+        --paper-radio-button-checked-ink-color: var(--paper-orange-500);
+        --paper-radio-button-unchecked-color: var(--paper-orange-900);
+        --paper-radio-button-unchecked-ink-color: var(--paper-orange-900);
+      }
+      paper-radio-button {
+        display: block;
+      }
+      
+     
+      paper-header-panel {
+        float: left;
+        width: 100%;
+        height:100%x;
+        margin: 0;
+        @apply(--shadow-elevation-2dp);
+      }
+      .paper-header {
+        height: 40px;
+        font-size: 16px;
+        line-height: 60px;
+        padding: 0 0 20px 0;
+        color: white;
+        transition: height 0.2s;
+       
+      }
+      .paper-header.tall {
+        height: 120px;
+      }
+      .paper-header.medium-tall {
+        height: 100px;
+        line-height: 50px;
+      }
+      .content {
+        height: 100%;
+         margin-top: 10px;
+      }
+      .cover {
+        margin: 60px;
+      }
+      .blue .paper-header {
+        background-color: var(--paper-light-blue-500);
+      }
+      .red .paper-header {
+        background-color: var(--paper-red-500);
+      }
+      .orange .paper-header {
+        background-color: var(--paper-amber-500);
+      }
+      .green .paper-header {
+        background-color: var(--paper-green-500);
+      }
+      .cyan .paper-header {
+        background-color: var(--paper-cyan-500);
+      }
+      .lime .paper-header {
+        background-color: var(--paper-lime-500);
+      }
+      .pink .paper-header {
+        background-color: var(--paper-pink-a200);
+      }
+      /* TODO: replace these with background: linear-gradient(white, var(...))
+       when custom properties allow it */
+      .blue .content {
+        background: linear-gradient(white, #b3e5fc);
+      }
+      .red .content {
+        background: linear-gradient(white, #ffcdd2);
+      }
+      .orange .content {
+        background: linear-gradient(var(--paper-grey-50), #ffffff);
+      }
+      .green .content {
+        background: linear-gradient(white, #c8e6c9);
+      }
+      .cyan .content {
+        background: linear-gradient(white, #b2ebf2);
+      }
+      .lime .content {
+        background: linear-gradient(white, #f0f4c3);
+      }
+      .pink .content {
+        background: linear-gradient(white, #f8bbd0);
+      }
+      
+      .avatar {
+      display: inline-block;
+      height: 64px;
+      width: 64px;
+      border-radius: 50%;
+      background: var(--paper-pink-500);
+      color: white;
+      line-height: 64px;
+      font-size: 30px;
+      text-align: center;
+    }
+    .cards {
+      @apply(--layout-vertical);
+      @apply(--center-justified);
+      max-width: 400px;
+      float:left;
+      margin:10px;
+     
+      
+     
+     
+     
+    }
+
+        paper-card {
+      width: 100%;
+      margin-bottom: 16px;
+     display: table;
+      
+     
+      
+    }
+    
+   
+    
+    .fancy .title {
+      position: absolute;
+      top: 30px;
+      left: 100px;
+      color: var(--paper-indigo-500);
+    }
+    .fancy img {
+      width: 100%;
+    }
+    .fancy .big {
+      font-size: 22px;
+      padding: 8px 0 16px;
+      color: var(--google-grey-500);
+    }
+    .fancy .medium {
+      font-size: 16px;
+      padding-bottom: 8px;
+    }
+    .pink {
+      --paper-card-header-color: var(--paper-pink-500);
+    }
+
+   body{background-color: var(--paper-grey-50);}  
+   
+ </style>
+  
