@@ -31,12 +31,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     var multiselect=false;
     function callpopulate(event)
     {
-      var ptbl = document.querySelector('paper-table-simple');
+      var ptbl = document.querySelector('fancy-listview');
       //alert(ptbl.multiselect);
       //var datacont = document.getElementById('data');
       //var datacont = document.getElementById('s');
       //var childrens = datacont.childNodes;
      //alert(ptbl.prevc);
+       var datacont = (event.target.parentNode).parentNode;
+       datacont.style.backgroundColor='#FAFAFA';
+     if(ptbl !=null)
+     {
      if(ptbl.prevc !==undefined && ptbl.multiselect == false)
      {
       // alert('go');
@@ -44,9 +48,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // alert('papa');
      }
        
-      var datacont = (event.target.parentNode).parentNode;
+     
       //console.log(datacont);
-      datacont.style.backgroundColor='#FAFAFA';
+     
      if(ptbl.multiselect==true)
      {
        var ind = ptbl.selected.indexOf(event.target.parentNode.parentNode.querySelector('input[name="_id"]').value);
@@ -62,8 +66,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        
       
      }
-      
       ptbl.prevc=datacont;
+     }
+      
+     
       var childNodes = datacont.childNodes;
       
        for(var item in childNodes)
@@ -71,7 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         //console.log(childNodes[item].tagName);
         if(childNodes[item].tagName==='INPUT' &&  childNodes[item].name !=='nameholder')
         {
-             console.log(childNodes[item]);
+            // console.log(childNodes[item]);
              obj[childNodes[item].name] = childNodes[item].value;
         }
              
@@ -150,7 +156,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         hide:{type:Array, value:[], observer:'_hiddenchanged'},
         descriptive:{type:Object, observer:'_hiddenchanged'},
         html:String,
-        textidentifier:{type:String}
+        textidentifier:{type:String},
+        showimage:{type:Boolean, value:false}
         
        
       },
@@ -208,11 +215,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          var unit ="N/A";
          var boldtext ="N/A";
          //console.log(str);
+        // console.log(this.showimage);
          if(this.textidentifier !== undefined)
             boldtext = decodeURI(str[itm][this.textidentifier]);
          // if(strings[itm].image !==null && strings[itm].image !== undefined)
+         if(this.showimage ===true || this.showimage==='true')
+         {
          if (str[itm].image !==null || str[itm].image !== undefined)
                img =   getImage(strings[itm].image);
+         }
          if(strings[itm]._id !== null && strings[itm]._id !== undefined) 
          
              _id =  decodeURI(strings[itm]._id);
@@ -244,20 +255,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '<div id="data">'+
             '<paper-material id="subdata" style="padding: 16px; margin: 16px;  background-color: #fff; color: #555;">'+
             '<input type="hidden" value="item_'+i+'" name="nameholder" />'+
-            ' <input type="hidden" value="'+_id+'" name="_id" class="id" />'+
-            '<div class="image" style="display: inline-block; position: relative; height:56px; width: 100px; background: #ddd; line-height: 64px; font-size: 30px; color: #666; text-align: center;"> <input type="hidden" value="image" name="nameholder" />'+img+'</div>';
-            if(boldtext !== undefined) html+='<div style="font-size: 22px; padding: 8px 0 16px; color: #888;" class="subc"><input type="hidden" value="'+this.textidentifier+'" name="nameholder" /> <a href="#" onclick="callpopulate(event)" class="subc">' +boldtext + '</a></div>';
+            ' <input type="hidden" value="'+_id+'" name="_id" class="id" />';
+           if(this.showimage===true) html+= '<div class="image" style="display: inline-block; position: relative; height:56px; width: 100px; background: #ddd; line-height: 64px; font-size: 30px; color: #666; text-align: center;"> <input type="hidden" value="image" name="nameholder" />'+img+'</div>';
+           if(boldtext !== undefined) html+='<div style="font-size: 22px; padding: 8px 0 16px; color: #888;" class="subc"><input type="hidden" value="'+this.textidentifier+'" name="nameholder" /> <a href="#" onclick="callpopulate(event)" class="subc">' +boldtext + '</a></div>';
             var div = '';
             // console.log(str);
             for(var key in str[itm])
             {
+              
              if(this.hide.indexOf(key) === -1 && key !=='image')
              {
                var label = key;
               
                if(this.descriptivetext !==undefined && this.descriptivetext[key] !== undefined)
                  label = this.descriptivetext[key];
-              
+              // console.log(decodeU(decodeURI(str[itm][key])));
                div+= '<div style="font-size: 16px; padding-bottom: 8px;" class="subc"> <input type="hidden" value="'+key+'" name="nameholder" />  <b>'+label+': </b><span style="font-size: 12px;" class="subc"> '+decodeURI(str[itm][key])+'</span></div>';
              }
              else

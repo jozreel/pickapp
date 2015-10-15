@@ -12,7 +12,7 @@ simplemodel.prototype.save = function(callback, event)
   var temp =this.prepare();
    //console.log(this);
    delete temp._id;
-   console.log(temp);
+   //console.log(temp);
    if(event ==='A')
      this.insert(temp,callback);
    if(event ==='E')
@@ -22,6 +22,24 @@ simplemodel.prototype.save = function(callback, event)
       this.updateOne({_id:objid},temp, callback);
     }
   
+}
+
+simplemodel.prototype.checkecnoded =function(str)
+{
+  var retstr="";
+  var regx = new RegExp(/%\d[\dA-F]/g);
+		if(regx.test(str))
+		{
+		  
+     retstr= str;
+        //widget.innerHtm = obj.htm;
+			//console.log('hi');
+		}
+    else
+    {
+      retstr =encodeURI(str);
+    }
+    return retstr;
 }
 
 simplemodel.prototype.prepare =function()

@@ -6,3 +6,4 @@ exports.controlerpath = path.normalize(ROOT+'/application/controller/');
 exports.publicpath = path.normalize(ROOT+'/public');
 exports.defaultpage = 'index'
 exports.defaultcontroler = "admin"
+exports.templatable = true;

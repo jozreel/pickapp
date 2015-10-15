@@ -4,17 +4,21 @@ var cache = function(req, res)
 	this.res= res;
 }
 
-cache.prototype.cacheFile=function(fname)
+cache.prototype.cacheFile=function(fname, isview)
 {
-	
+	var path = '';
 	var cfg = require('../config/config');
-	var path = cfg.publicpath + '/'+fname;
+	if(isview)
+	 path = fname;
+	else	
+	 path = cfg.publicpath + '/'+fname;
 	var fs = require('fs');
 	
 	var stats = fs.statSync(path);
 	var mtime = stats.mtime;
 	var size = stats.size;
 	
+	  // console.log(fname);
 	var modSince = this.req.headers["if-modified-since"];
 	//console.log(modSince);
 	
@@ -24,9 +28,12 @@ cache.prototype.cacheFile=function(fname)
 	   modSince = new Date(modSince);
 	if(modSince.getTime()==mtime.getTime())
 	{
-		
+		//console.log('ended');
+	  if(this.res.compress !==undefined && this.res.compress.compress === true)
+	    this.res.writeHead(304,{"if-modified-since":mtime.toUTCString()}, {'content-encoding': 'deflate'});
+	  else
        this.res.writeHead(304,{"if-modified-since":mtime.toUTCString()});
-		this.res.end();
+      this.res.end();
 		
 		return true;
 	}
@@ -36,16 +43,20 @@ cache.prototype.cacheFile=function(fname)
 	return false;
 }
 
-cache.prototype.writemime =function(ext, data,fname,mime)
+cache.prototype.writemime =function(ext, data,fname,mime,isview)
 {
 	//console.log(fname);
 	var cc;
 	var ex;
 	var prag;
+	var obj = this;
 	if(this.Cache_Control!=null) cc= this.Cache_Control; else cc = 'max-age=600';
 	
 	var cfg = require('../config/config');
-	var path = cfg.publicpath + '/'+fname;
+	if(isview ===true)
+	 path = fname;
+	else
+	  var path = cfg.publicpath + '/'+fname;
 	var fs = require('fs');
 	var stats = fs.statSync(path);
 	var mtime = stats.mtime;
@@ -68,13 +79,51 @@ cache.prototype.writemime =function(ext, data,fname,mime)
 	}
 	else
 	  this.res.setHeader("Expires", '-1');
-	this.res.setHeader('Last-Modified', mtime);
+	 this.res.setHeader('Last-Modified', mtime);
 	//console.log(this.res);
-	this.res.writeHead(200, {'Content-Type':mime+'/'+ext});
-	if(mime !=='text')
-	 this.res.end(data, 'binary');
-	else
-	   this.res.end(data.toString());
+	//this.res.writeHead(200, {'Content-Type':mime+'/'+ext});
+	
+	if(this.res.compress !==undefined && this.res.compress.compress === true)
+			 {
+				  var zlib = require('zlib');
+				  //var raw = fs.createReadStream('index.html');
+				  if (this.res.compress.acceptEncoding.match(/\bdeflate\b/)) {
+                     zlib.deflate(data, function (err, buffer) {
+						 if (err) throw err;
+						 obj.res.writeHead(200, {'content-encoding': 'deflate'},{'Content-Type':mime+'/'+ext});
+							   
+						   
+						 
+						  if(mime !=='text')
+	                        obj.res.end(buffer,'binary');
+						   else
+	                        obj.res.end(buffer);
+							  
+					  
+					 });
+                     } 
+					 else if (this.res.compress.acceptEncoding.match(/\bgzip\b/)) {
+						  zlib.gzip(data, function (err, buffer) {
+						 if (err) throw err;
+                            obj.res.writeHead(200, { 'content-encoding': 'gzip' }, {'Content-Type':mime+'/'+ext});
+						   // obj.res.writeHead(200, {'Content-Type':mime+'/'+ext});
+						 
+						  if(mime !=='text')
+	                          obj.res.end(buffer, 'binary');
+						else
+	                       obj.res.end(buffer);
+						 
+                   });
+			 }
+			 }
+			 else{
+	           this.res.writeHead(200, {'Content-Type':mime+'/'+ext})
+	           
+	           if(mime !=='text')
+	           this.res.end(data, 'binary');
+	           else
+	           this.res.end(data.toString());
+			 }
 	  // console.log(mime);
 	  
 }

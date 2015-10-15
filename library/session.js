@@ -93,7 +93,7 @@ session.prototype.getallCookies =function()
 	//console.log(this.sessionVars);
 	 // var name = cname+'=';
 	// console.log(this.req);
-	var ckArray='';
+	var ckArray=[];
 	if(this.req.headers.cookie)
 	{
 	  ckArray= this.req.headers.cookie.split(';');

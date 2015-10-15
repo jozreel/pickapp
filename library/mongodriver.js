@@ -418,6 +418,107 @@ mongodriver.prototype.traverseCursor =function(cursor,db, callback,count,coll)
     this.findall(callback, true)
    }
 }
+mongodriver.prototype.findandupdate  =function(lookup, obj,callback)
+{
+  var res = {};
+  res.success=true;
+   this.MongoClient.connect(this.connectionString, function(err, db)
+  {
+    if(err)
+     {
+      console.log(err);
+      res.success=false;
+      res.error = err;
+     }
+    try{
+
+     var collection = db.collection('counters');
+     collection.findAndModify(
+       
+       {_id:lookup},
+       [['_id','asc']],
+       {$set:obj},
+       {new:true},
+       function(err, object){
+         try{
+           console.log(err);
+           callback(object.value, res);
+         }
+         catch(error)
+         {
+           console.log(error);
+           res.success=false;
+           res.error = err;
+         }
+         
+         }
+     );
+     // console.log(ret.seq);
+     
+    }
+    catch(err){
+      console.log(err);
+      res.success=false;
+      res.error = err;
+    }
+  });
+}
+mongodriver.prototype.generateNextSequence = function(lookup, callback)
+{
+  var obj = this;
+  this.MongoClient.connect(this.connectionString, function(err, db)
+  {
+    if(err)
+      console.log(err);
+    try{
+
+     var collection = db.collection('counters');
+     collection.findAndModify(
+       
+       {_id:lookup},
+       [['_id','asc']],
+       {$inc:{seq:1}},
+       {new:true},
+       function(err, object){
+         try{
+           if(err)
+            console.log(err);
+           callback(object.value.seq);
+         }
+         catch(error)
+         {
+           console.log(error);
+         }
+         
+         }
+     );
+     // console.log(ret.seq);
+     
+    }
+    catch(err){
+      console.log(err);
+    }
+  });
+}
+
+mongodriver.prototype.insertcounters=function(counterid)
+{
+  this.MongoClient.connect(this.connectionString, function(err, db)
+  {
+     try{
+    if(err)
+     console.log(err);
+     var collection = db.collection('counters');
+       collection.insert({_id:counterid, seq:0});
+     }
+     catch(err)
+     {
+       console.log(err);
+     }
+  }
+  );
+  
+}
 mongodriver.prototype.getMappedObject = function(obj)
 {
    var temp = {};

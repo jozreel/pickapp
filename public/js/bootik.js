@@ -53,5 +53,31 @@ function deleteobj(apaser)
          apaser.submit=true;
   //apaser.
 }
+ function toHTML(txt)
+ {
+  return txt.replace(/<([^<>]+\/?)>/g,'<br />&lt;$1&gt;<br />').
+         replace(/<(\/[a-zA-Z]+(\-?[a-zA-Z]+)?)>/g,'<br />&lt;$1&gt;').
+         replace(/"/g,'&quot;');
+ }
+ 
+ function rplacetags(str)
+ {
+   str.replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+ }
+ function removetags(str)
+ {
+   return str.replace(/(<[^<>]+>)/g,'')
+ }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
 
