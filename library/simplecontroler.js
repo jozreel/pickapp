@@ -62,4 +62,32 @@ simplecontroler.prototype.jsonResp =function(r)
 	    this.res.end(jsn);
 }
 
+simplecontroler.prototype.showtemplate =function()
+{var res = this.res;
+  var cfg = require('../config/config');
+  var temp = require('./template');
+  var template = new temp()
+  var sc= this;
+	//var tempname = this.templatename;
+	if(cfg.templatable ===true)
+	{
+		//console.log('inthis');
+		this.templateid = cfg.templateid;
+		template.loadtemplate(this.templateid, function(arr,tname, err)
+		{
+			//console.log(arr);
+			//for(var att in arr.media)
+			//{
+				
+			//}
+			if(arr.success !==undefined && arr.success ===false)
+			 sc.jsonResp(arr);
+			else
+			  sc.load.showintemplate(tname,arr,res,false);// use this as the callback to load template;
+		}
+		);
+		
+	}
+}
+
 module.exports = simplecontroler;

@@ -1286,9 +1286,9 @@ this.clearForm =function(bval)
 		  reader.onloadend = function(){
            //console.log(read);
              read++;
-          var ig =encodeURI(reader.result);
+          var ig =reader.result;
     
-            obj= {filename:fname, filedata:encodeURI(ig)};
+            obj= {filename:fname, filedata:ig};
            jsn.push(obj);
 		   
 		   if(read === files.length)

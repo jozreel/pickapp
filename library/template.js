@@ -1,85 +1,199 @@
-
-var template = function(){}
-template.prototype.loadtemplate = function(tid)
+var load = require('./ajsload');
+var template = function(){
+	
+}
+template.prototype.loadtemplate = function(tid,callback)
 {   
 	var cont = this;
-	var mod =this.load.model('templates');
+	var mod =load.model('template');
 	var widgetobj={};
-	
-	mod.find({tempid:tid},null,false,function(doc){
+	//widgetobj.media =[];
+	//console.log(mod);
+	mod.find({templateid:parseInt(tid)},null,false,function(doc){
 		var i=0;
-		for(var wid in doc.widgets)
+		
+		if(Object.keys(doc).length === 0)
+		 callback({success:false,error:"empty set"});
+		
+		for(var wid in doc.tarray)
 		{
-			i++;
-			cont.loadwidget(doc.widgets[wid], i , doc.widgets.length,widgetobj);
+			
+			
+			cont.loadwidget(doc.tarray[wid],
+			function(arr,med){
+				
+				i++;
+				for (var attrname in arr) {
+				//if(attrname !== 'media')
+				//{
+					widgetobj[attrname] = arr[attrname];
+				//}
+			    }
+				for (var medname in med) {
+				//if(attrname !== 'media')
+				//{
+					if(widgetobj[medname] === undefined)
+					   widgetobj[medname] = med[medname];
+				//}
+			    }
+				//widgetobj.media.push(arr.media);
+				//arr[wid]
+				//widgetobj
+				if(i === doc.tarray.length)
+				{
+					
+				   callback(widgetobj, doc.templatename);
+				}
+			     
+			});
+		  
 		}
+	
+		//console.log(widgetobj);
+		
 	});
 	
 }
-template.prototype.loadwidget = function(wid, itt,count,wo)
+template.prototype.loadwidget = function(wid,callback)
 {
-   
+	var tempobj ={};
+   //console.log(itt,count);
 	var cont = this;
-	var mod =this.load.model('widget');
-	 mod.find({widgetid:wid}, null, false, function(doc){
-	var htm = doc.html;
+	var mod =load.model('widget');
+	
+	
+		
+	mod.find({widgetid:parseInt(wid)}, null, false,function (doc)
+		{
+			
+			   
+			console.log('step');
+			//var newitt = itt;
+	         var htm = decodeURI(doc.innerHtm);
+	       
+	
+	        if(doc.media.length >0)
+	        {
+	          cont.loadmedia(doc.media, function(arr)
+	         {
+			    //arr[wid] = htm;
+				tempobj[wid] = htm;
+				//tempobj['media']=arr
+				
+		        callback(tempobj,arr);
+		        
+			 });
+	}
+	else{
+		
+		//var arr = {};
+		tempobj[wid] = htm;
+		
+		callback(tempobj);
+		
+	} 
+   }
+	);
+}
+	
+	// mod.find({widgetid:parseInt(wid)}, null, false, function(doc){
+	/*var newitt = itt;
+	var htm = decodeURI(doc.innerHtm);
+	var replace = doc.widgetid;
+	
+	if(doc.media.length >0)
+	{
 	cont.loadmedia(doc.media,function(arr)
 	{
-		for(var ind in arr)
+		//console.log(arr);
+		/*for(var ind in arr)
 		{
 		  wo.ind = arr[ind];	
 		}
-	    wo.wid = htm;
-		if(itt===count)
+		if(itt ===count)
 		{
-			console.log(wo); // i guess you could load the file here buut replace placeholders first
-		}
+			console.log('ccj');	
+		}*/
+	   // arr.wid = htm;
+		//callback(arr,itt);
+		//if(itt===count)
+		//{
+			//console.log(wo); // i guess you could load the file here buut replace placeholders first
+		//}
 		 
 	   //tmparr.push
-	});
+	//});
+	//}
+	//else{
+		
+		//var arr = [];
+		//arr.wid = htm;
+		
+		//callback(arr,itt)
+	//}
 	//parsetexthere
-	});
+	//});
 	
-}
+//}
 template.prototype.loadmedia = function(media,callback){
 	
 	var cont = this;
 	var i=0;
+	//console.log(media);
+	var temp= [];
 	for(var med in media)
 	{
+		//console.log(media);
 		i++;
-		if(media[med] !== Object)
-		{
-			temparrmed[med]= media[med]
-		}
-		else if(media[med].type === 'image')
+		//console.log(media[med]);
+		    if(media[med].type === 'image')
 			{
-				cont.findimage(media[med].imageid,i,media.length,callback);
+				cont.findimage(media[med].medid,i,media.length,temp,callback);
 			}
 			else if(media[med].type === 'video')
 			{
-				cont.findvideo(media[med].videoid,i,media.length,callback);
+				cont.findvideo(media[med].medid,i,media.length,temp,callback);
 			}
 			else if(media[med].type === 'audio')
 			{
-				cont.findaudio(media[med].audioid,i,media.length,callback);
+				cont.findaudio(media[med].medid,i,media.length,temp,callback);
 		
 			}
 			else
 			{
-				cont.findfile(media[med].fileid,i,media.length,callback);
+				cont.findfile(media[med].fileid,i,media.length,temp,callback);
 			}
 		}
 	
 }
 
-template.prototype.findimage = function(image,count,total, callback)
+template.prototype.findimage = function(image,count,total,temp, callback)
 {
+	var Buffer =require('buffer').Buffer;
 	var cont=this;
-	var mod =this.load.model('image');
+	var mod = load.model('image');
 	mod.find({imageid:image},null, false,function(doc)
 	{
-		cont.itterate(doc.imageid, doc.imagedata,count, total,callback);
+		  var tmpdoc=''
+		  
+		//console.log(doc);
+		var tmpobj = doc;
+		var buffarr =[];
+		mod.streamfromgrid(doc.gridid, function(doc,se,sc){
+			if(doc!=null)
+			{
+				 buffarr.push(doc);
+			}
+			 // tmpdoc += doc;
+			if(se)
+			{
+				tmpdoc= Buffer.concat(buffarr);
+					
+		        tmpdoc =  tmpdoc.toString('base64');
+			  cont.itterate(tmpobj.imageid, tmpdoc,count, total,callback,temp);
+			}
+		});
+		
 	});
 }
 template.prototype.findvideo = function(video,count,total, callback)
@@ -111,20 +225,33 @@ template.prototype.findfile = function(file, count,total, callback)
 	});
 }
 
-template.prototype.itterate = function(id, data,count,total,callback)
+template.prototype.itterate = function(id, data,count,total,callback,temp)
 {
-	
-	var temp= {};
+	//console.log(id);
+	//console.log(id, data);
 	temp[id] = data;
 	if(count === total)
 	{
+		//console.log(temp);
 		callback(temp);
 	}
 }
 
-function callback(tmparr)
+template.prototype.loopthrough =function(count,total, data, callback)
+{
+	if(count === total)
+	{
+		
+		callback(data);
+	}
+}
+
+/*function callback(tmparr)
 {
 	//var tmparr = {};
 	tmparr[id] = data;
 	
-}
+}*/
+
+
+module.exports = template;

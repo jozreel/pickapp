@@ -64,6 +64,16 @@ simplemodel.prototype.deleteone = function(callback)
   this.removeone({_id:objid},callback);
 }
 
+simplemodel.prototype.gridsave = function(fdata,callback)
+{
+   var temp =this.prepare();
+   //console.log(this);
+   //delete temp._id;
+   //console.log(temp);
+   
+     this.savetogrid(fdata,temp,callback);
+}
+
 
 
 

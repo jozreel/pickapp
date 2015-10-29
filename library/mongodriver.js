@@ -4,12 +4,13 @@ var DB = require('mongodb').Db;
 var mongodriver =function()
 {
  
-  this.MongoClient = require('mongodb').MongoClient;
+ this.MongoClient = require('mongodb').MongoClient;
  this.Server =  require('mongodb').Server;
  this.assert = require('assert');
  this.db = 'mongosb';
- this.connectionString = 'mongodb://dbuser:passwd@localhost:27017/bootik'; //abuild from config;
-mongodriver.prototype.crudConnet = function(){ 
+ this.connectionString = 'mongodb://dbuser:passwd@10.0.3.159:27017/bootik'; //abuild from config;
+}
+  mongodriver.prototype.crudConnet = function(){ 
 	var db =new DB('bootik', new Server('localhost', 27017));
   // Establish connection to db
   db.open(function(err, db) {
@@ -42,10 +43,11 @@ mongodriver.prototype.crudConnet = function(){
     });
   });
 }
+
 //b = new Mongo().getDB("myDatabase");
 mongodriver.prototype.connect =function(){
   var obj = this;
-  var db =new DB('bootik', new this.Server('localhost', 27017));
+  var db =new DB('bootik', new this.Server('10.0.3.159', 27017));
   db.open(function(err,db)
   {
     if(err)
@@ -114,6 +116,7 @@ mongodriver.prototype.removeone = function(cat, callback)
 
 mongodriver.prototype.insert = function(obj,callback)
 {
+  //console.log(typeof callback);
   var obj1 = this;
   //console.log(this.MongoClient);
   this.MongoClient.connect(this.connectionString, function(err, db)
@@ -215,9 +218,256 @@ mongodriver.prototype.replace=function(id, rep)
 }
 
 
+mongodriver.prototype.savetogrid = function(filebuff,fdata,callback)
+{
+  //console.log(callback);
+  var Buffer = require('buffer');
+  var gd = require('mongodb').Grid;
+  //console.log(gd);
+  var obj1=this;
+  //this.MongoClient
+ 
+ var Grid = require('mongodb').GridStore
+ //console.log(Grid);
+ this.MongoClient.connect(this.connectionString, function(err, db)
+  {
+    
+    //console.log(Buffer);
+    if(err)
+        throw err;
+    var ObjectId = require('mongodb').ObjectID;
+    var fileId = new ObjectId();
+   // console.log(fileId);
+  ///  console.log(fdata);
+    //var grid = new Grid(db,fileId,'w',{root:'fs'});
+    var grid = new Grid(db,fileId,fdata.filename,'w',{root:'fs', content_type:fdata.type, metadata:fdata});
+    grid.chunkSize = 1024 * 256;
+   // console.log(grid);
+    grid.open(function(err, grid) {
+     var Step = require('step');
+     Step(
+       
+       function writeData() {
+         var group = this.group();
+      var length = filebuff.length;
+     // console.log(filebuff);
+    //var buff = new Buffer(length);
+    // buff.write(filebuff,0);
+    // for(var i = 0; i < length; i += ) {
+       grid.write(filebuff, group());
+    // }
+   },
+
+   function doneWithWrite(vdd) {
+    // var res={};
+    // res.sucess= true;
+   // console.log(vdd);
+     grid.close(function(err, result) {
+       if(err)
+       {
+         var res={};
+         res.sucess= false;
+         res.error = err;
+          callback(res);
+          db.close();
+       }
+       else
+       {
+       console.log("File has been written to GridFS",result);
+       // db.close();
+        //var collection = db.collection(obj1.modelname);
+        fdata.gridid = result._id;
+        
+        obj1.insert(fdata,callback);
+       // console.log(fdata);
+        db.close();
+       }
+        
+        
+        
+     });
+     
+   }
+ )
+});
+  });
+}
+
+mongodriver.prototype.streamfromgrid =function(fileid, callback, bulk)
+{
+ var Buffer = require('buffer');
+  
+  var obj1=this;
+  //this.MongoClient
+ 
+ var Grid = require('mongodb').GridStore
+  var ObjectId = require('mongodb').ObjectID;
+   // var fid =
+   
+ //console.log(Grid);
+ this.MongoClient.connect(this.connectionString, function(err, db)
+  {
+   if(err)
+   {
+     console.log(err);
+   }
+   else{
+   var grid = new Grid(db, new ObjectId(fileid),'r');
+   
+    grid.open(function(err,gs)
+    {
+    if(err)
+    {
+      console.log(err);
+    }
+    else
+    {
+      
+      var stream = gs.stream(true);
+      //console.log(stream);
+      Grid.exist(db, new ObjectId(fileid), function(err, result) {
+        if(err)
+        {
+          console.log(err,'');
+        }
+        else
+        {
+        // console.log(result,'exist');
+        stream.on("data", function(chunk){
+         //console.log('jojo');
+          //console.log(chunk.toString());
+          callback(chunk,false,false);
+        });
+     
+      stream.on('end', function()
+      {
+       console.log('end');
+        callback(null, true,false)
+      });
+       stream.on('close', function(data)
+      {
+        console.log('closed');
+         callback(null, true,true)
+        db.close();
+       
+      });
+        
+      }
+      });
+      }
+
+      
+    }
+    );
+    }
+  }
+  );
+
+}
+
+
+mongodriver.prototype.pipefromgrid =function(fileid, res)
+{
+ 
+  console.log('piping');
+ var Grid = require('mongodb').GridStore
+  var ObjectId = require('mongodb').ObjectID;
+ 
+ this.MongoClient.connect(this.connectionString, function(err, db)
+  {
+   if(err)
+   {
+     console.log(err);
+   }
+   else{
+   var grid = new Grid(db, new ObjectId(fileid),'r');
+   
+    grid.open(function(err,gs)
+    {
+    if(err)
+    {
+      console.log(err);
+    }
+    else
+    {
+      
+      var stream = gs.stream(true);
+      //.log(res);
+      Grid.exist(db, new ObjectId(fileid), function(err, result) {
+        if(err)
+        {
+          console.log(err,'');
+        }
+        else
+        {
+         
+          decodeURI(stream.pipe(res));
+         // res.end();
+        }
+        });
+
+      
+    }
+    });
+  }
+  }
+ );
+}
+
+mongodriver.prototype.streamt=function(fileid)
+{
+ 
+  var Buffer = require('buffer');
+  
+  var obj1=this;
+  //this.MongoClient
+ 
+ var Grid = require('mongodb').GridStore
+  var ObjectId = require('mongodb').ObjectID;
+   // var fid =
+   
+ //console.log(Grid);
+ this.MongoClient.connect(this.connectionString, function(err, db)
+  {
+   if(err)
+    console.log(err);
+   else
+   {
+
+      //var gridStore = new GridStore(db, new ObjectId(fileid), "w");
+       Grid.read(db, new ObjectId(fileid), function(err, fileData) {
+         // assert.equal(data.length, fileData.length);
+         if(err)
+         {
+           console.log(err);
+         }
+         else{
+         console.log(fileData.toString());
+          db.close();
+         }
+        });
+   }
+  }
+ );
+  
+}
+
+
+mongodriver.prototype.getfromgrid = function(fileid, callback)
+{
+  var Grid = require('mongodb').Grid;
+   var grid = new Grid(db, 'fs');
+    
+    grid.get(fileid, function(err, data) {
+     callback(decodeURI(data));
+  });
+}
+
+
 
 mongodriver.prototype.find = function(cond,opt, coll,callback)
 {
+  //console.log(cond);
   var obj = this;
   this.MongoClient.connect(this.connectionString, function(err, db)
   {
@@ -270,12 +520,18 @@ mongodriver.prototype.findall = function(callback,coll)
   var obj = this;
   this.MongoClient.connect(this.connectionString, function(err, db)
   {
+    
     if(err)
-      throw err;
+    {
+      
+      console.log(err);
+      callback([{success:false, error:err}]);
+    }
     var collection = db.collection(obj.modelname);
     collection.find().count(function(err,count){
       if(err)
       {
+       
         throw err;
         console.log(err);
       }
@@ -285,6 +541,10 @@ mongodriver.prototype.findall = function(callback,coll)
        
        
        obj.traverseCursor(cussor,db, callback,count,coll);
+      }
+      else
+      {    
+      callback([{success:false, error:'Empty set'}]);
       }
      
     });
@@ -313,7 +573,7 @@ mongodriver.prototype.close = function()
 {
   this.db.close();
 }
-}
+
 
 
 mongodriver.prototype.traverseCursor =function(cursor,db, callback,count,coll)
@@ -321,16 +581,21 @@ mongodriver.prototype.traverseCursor =function(cursor,db, callback,count,coll)
 	 var obj=this;
    var itter = 0;
   var tmparr =[];
-  
+  if(count===0)
+  {
+    callback({error:true,message:"empty"});
+  }
+  else{
 	 cursor.each(function(err, doc) {
-     
       obj.assert.equal(err, null);
 	  if(doc!==null)
 	  {
+    
        itter++;
        if(coll === true)
        {
          //console.log(doc);
+         
          tmparr.push(doc);
          if(itter == count)
          {
@@ -348,12 +613,10 @@ mongodriver.prototype.traverseCursor =function(cursor,db, callback,count,coll)
     // 
 		 
 	  }
-    else
-    {
-      //db.close();
-    }
 	 }
+  
 	 );
+  }
    if(itter == count)
       db.close();
     //console.log('door');

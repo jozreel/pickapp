@@ -3,7 +3,7 @@ var template = new simple.simplemodel();
 template.modelname = "template";
 template.addtemplate = function(obj,callback)
 {
-	//this.insertcounters('templateid');
+	this.insertcounters('templateid');
 	this.generateNextSequence('templateid', function(next){
 		template.innerHtm = encodeURI(obj.htm);
 	    template.placeholder='\{{'+next+'\}}';

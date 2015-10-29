@@ -1,9 +1,9 @@
 $html(header);
 
-<link rel="import" href="polymer/bower_components/ajax-parser/ajax-parser.html">
-<link rel="import" href="polymer/bower_components/paper-material/paper-material.html">
-<link rel="import" href="polymer/bower_components/paper-button/paper-button.html">
-<link rel="import" href="polymer/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/polymer/bower_components/ajax-parser/ajax-parser.html">
+<link rel="import" href="/polymer/bower_components/paper-material/paper-material.html">
+<link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/polymer/bower_components/paper-input/paper-input.html">
 <paper-material>
 
  <div style="width:100%; height:600px;">
@@ -32,20 +32,35 @@ $html(wysiwig);
  });
  function submitpage()
  {
-   var elem = document.querySelectorAll('.mediadelete');
    
-  // console.log(elem);
+   var dv = document.createElement('div');
+  // dv.id = 'dv';
+   
+   dv.innerHTML = document.getElementById("htm").innerHTML;
+   var elem = dv.querySelectorAll('.mediadelete');
+   
+   
+  //console.log(dv.innerHTML);
    var arrvals =[];
    var media = [];
+   var tempmed = [];
    var str = document.getElementById("htm").innerHTML;
    str.replace(/\{{(\w+)\}}/g, function(x,k,v){
           //console.log(k);
-				 if(arrvals.indexOf(k) ===-1)
+				 if(arrvals.indexOf(k) ===-1 && tempmed.indexOf(k) ===-1)
          {
            if(k.match(/media/g))
            {
-             console.log("bla");
-             media.push(k);
+             //console.log('lo');
+            var s= k.indexOf('media');
+             var tp = k.substring(0,s);
+             //console.log(tp);
+             var med = {};
+             med.medid = encodeURI(k);
+             med.type = tp;
+            // console.log(JSON.stringify(med));
+             media.push(JSON.stringify(med));
+             tempmed.push(k);
            }
            else
             arrvals.push(k);
@@ -54,7 +69,7 @@ $html(wysiwig);
          
      });
     // console.log('kokk');
-     //console.log(media,arrvals);
+    // console.log(media,arrvals);
      // console.log(elem);
    for(el in elem)
    {
@@ -63,24 +78,26 @@ $html(wysiwig);
         elem[el].parentElement.removeChild(elem[el]);
      
    }
+   
+   console.log(media);
     
-   sajax('#hdiv').setText(sajax('#htmld').html());
-  // cass= encodeURI(sajax('#hdiv').html());
-  /// console.log(decodeURI(cass));
- // var html = document.getElementById('htmld').innerHTML;
+   sajax('#hdiv').setText(sajax(dv).html());
+ 
    var html = sajax('#hdiv').html();
-  //var title = document.getElementById('title').value;
-  var ajp = document.getElementById('ajcat');
-  //var meta = document.getElementById('meta').value;
+
+ // var ajp = document.getElementById('ajcat');
    var name= document.getElementById('widgetname').value;
-   //var ebncd = encodeURI(html)
-   //console.log(decodeURI(ebncd));
-  var str= '{"htm":"'+encodeURI(html)+'","widgetname":"'+encodeURI(name)+'"}';
-          document.querySelector('#ajp').jsonstring = str;
+   
+  var str1= '{"htm":"'+encodeURI(html)+'","widgetname":"'+encodeURI(name)+'","media":['+media+']}';
+   
+         document.querySelector('#ajp').jsonstring = str1;
          document.querySelector('#ajp').rspelement  = document.getElementById("ptoast");
-         
-         document.querySelector('#ajp').respfunc=resp;
-         document.querySelector('#ajp').submit=true;    
+        
+        document.querySelector('#ajp').respfunc=resp;
+         document.querySelector('#ajp').submit=true;  
+      console.log(str1); 
+          
+       
  }
   //function  resp(to)
   //{

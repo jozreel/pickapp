@@ -1,10 +1,10 @@
-<link rel="import" href="polymer/bower_components/ajax-parser/ajax-parser.html">
-<link rel="import" href="polymer/bower_components/paper-material/paper-material.html">
-<link rel="import" href="polymer/bower_components/paper-button/paper-button.html">
-<link rel="import" href="polymer/bower_components/paper-input/paper-input.html">
-<link rel="import" href="polymer/bower_components/paper-dialog/paper-dialog.html">
-  <link rel="import" href="polymer/bower_components/neon-animation/neon-animations.html">
-   <link rel="import" href="polymer/bower_components/ajax-parser/ajax-req.html">
+<link rel="import" href="/polymer/bower_components/ajax-parser/ajax-parser.html">
+<link rel="import" href="/polymer/bower_components/paper-material/paper-material.html">
+<link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/polymer/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/polymer/bower_components/paper-dialog/paper-dialog.html">
+  <link rel="import" href="/polymer/bower_components/neon-animation/neon-animations.html">
+   <link rel="import" href="/polymer/bower_components/ajax-parser/ajax-req.html">
   <ajax-req  id="ajr" ></ajax-req>
  <div>
 <button id="html">HTML</button>
@@ -97,13 +97,14 @@ sajax().readystate(function()
         var cont =document.getElementById('imgh');
         for(var item in doc)
         {
+          console.log(doc);
           var element =document.createElement('div');
           element.style.width ='320px';
           element.style.height= '180px';
           element.style.display= 'inline-block';
           element.className = 'imgclk';
-         
-          var img = '<paper-material style="margin-right:5px;"><div style="position:relative;" onclick="imageclick(event)"><input type="hidden" name="placehld" value="'+doc[item].placeholder+'" /><paper-ripple></paper-ripple><img src="'+doc[item].imagedata+'" alt ="'+doc.alt+'" class="gimg"/>'
+          //console.log(doc[item].imagedata);
+          var img = '<paper-material style="margin-right:5px;"><div style="position:relative;" onclick="imageclick(event)"><input type="hidden" name="placehld" value="'+doc[item].placeholder+'" /><paper-ripple></paper-ripple><img src="data:'+doc[item].type+';'+'base64,'+doc[item].imagedata+'" alt ="'+doc.alt+'" class="gimg"/>'
           +'<div style="height:70px; position:absolute; color:white; font-weight:bold; width:100%; background-color: rgba(0, 0, 0, .4); bottom:0px;"  >'+doc[item].name+'</div></div></paper-material>';
           
           element.innerHTML =img;
@@ -137,7 +138,7 @@ sajax().readystate(function()
  function imageclick(obj){
      var ph =obj.target.parentElement.querySelector('input[name="placehld"]');
     var src= obj.target.parentElement.querySelector('img').src;
-    console.log(src);
+    //console.log(src);
     // var rng = sajax('#htm').getselectionObject().getRangeAt(0);
      var txtnode = document.createTextNode(ph.value)
      var img = document.createElement('img');

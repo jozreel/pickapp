@@ -1,11 +1,11 @@
 $html(header);
 
 
-<link rel="import" href="polymer/bower_components/ajax-parser/ajax-parser.html">
-<link rel="import" href="polymer/bower_components/paper-material/paper-material.html">
-<link rel="import" href="polymer/bower_components/paper-button/paper-button.html">
-<link rel="import" href="polymer/bower_components/paper-input/paper-input.html">
-<link rel="import" href="polymer/bower_components/fancy-listview/fancy-listview.html">
+<link rel="import" href="/polymer/bower_components/ajax-parser/ajax-parser.html">
+<link rel="import" href="/polymer/bower_components/paper-material/paper-material.html">
+<link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/polymer/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/polymer/bower_components/fancy-listview/fancy-listview.html">
 <div>
 <paper-material>
  <div style ="width:100%; height:1024px";> 
@@ -85,7 +85,7 @@ $html(wysiwig);
     // console.log(arrvals);
    // sajax().loadFile(document.getElementById("fl"), function(ofl){
      // console.log(ofl);
-         var data= {filedata:encodeURI(str), tarray:arrvals, filename:'breze.html', templatename:tname};
+         var data= {filedata:encodeURI(str), tarray:arrvals, filename:tname.trim()+'.html', templatename:tname};
          document.querySelector('#ajf').jsonstring = JSON.stringify(data);
          document.querySelector('#ajf').rspelement  = document.getElementById("ptoast");
          

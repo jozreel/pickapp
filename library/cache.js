@@ -6,6 +6,7 @@ var cache = function(req, res)
 
 cache.prototype.cacheFile=function(fname, isview)
 {
+	try{
 	var path = '';
 	var cfg = require('../config/config');
 	if(isview)
@@ -41,10 +42,17 @@ cache.prototype.cacheFile=function(fname, isview)
 	   return false;
 	}
 	return false;
+	}
+	catch(err)
+	{
+		console.log(err);
+	}
 }
 
 cache.prototype.writemime =function(ext, data,fname,mime,isview)
 {
+	
+	try{
 	//console.log(fname);
 	var cc;
 	var ex;
@@ -124,6 +132,11 @@ cache.prototype.writemime =function(ext, data,fname,mime,isview)
 	           else
 	           this.res.end(data.toString());
 			 }
+	}
+	catch(err)
+	{
+		console.log(err);
+	}
 	  // console.log(mime);
 	  
 }

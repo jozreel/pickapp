@@ -14,7 +14,16 @@ html.index= function()
 }
 html.widgets = function()
 {
-	this.loadview('widget', {title:'Modify pages'}, this.res)
+	try{
+   // console.log('hello'	);
+	this.loadview('widget', {title:'Modify pages'}, this.res);
+	console.log(this.req.requestdata,'ps');
+	//this.res.end('jojo');
+	
+	}
+	catch(err){
+		console.log(err);
+	}
 }
 
 html.findwidgets = function()
@@ -22,7 +31,7 @@ html.findwidgets = function()
 	var mymod = this.loadmodel('widget');
 		
     mymod.getAll(function(doc){
-		//console.log(decodeURI(doc[1].innerHtm));
+		//console.log(this.req.requestdaata);
 		html.jsonResp(doc);
 		
 		});
@@ -40,19 +49,23 @@ html.findtemplates = function()
 }
 
 html.findimages = function()
-{
+{ 
+	 var rp ={};
+	var obj = this;
 	var mymod = this.loadmodel('image');
-    console.log('lp');
-    mymod.getall(function(doc){
-		//console.log(decodeURI(doc[1].innerHtm));
+     mymod.getall(function(doc){
+		//doc.pipe(this.res);
 		html.jsonResp(doc);
+		//console.log(doc.toString());
+	 });
 		
-		});
+		//mymod.getallFromPipe(this.res);
 }
 
 
 html.addwidget = function()
 {
+	//console.log('awid');
 	//console.log(this.req.postdata, 'data');
 	var mod = this.load.model('widget');
 	if(this.req.postdata == undefined)
@@ -65,6 +78,11 @@ html.addwidget = function()
 html.templates = function()
 {
 	this.loadview('template', {title:'Templte Administration'}, this.res)
+}
+
+html.test = function()
+{
+	this.showtemplate();//('test', {title:'Templte Administration'}, this.res)
 }
 
 html.images = function()
@@ -86,6 +104,7 @@ html.addimage = function()
 	console.log('jojo');
 	var mod = this.load.model('image');
 	mod.addimage(this.req.postdata,function(doc){
+		console.log(doc);
 		html.jsonResp(doc);
 	})
 }

@@ -1,10 +1,10 @@
  
  $html(header);
- <link rel="import" href="polymer/bower_components/file-select/file-select.html">
- <link rel="import" href="polymer/bower_components/iron-form/iron-form.html">
-  <link rel="import" href="polymer/bower_components/paper-input/paper-input.html">
-  <link rel="import" href="polymer/bower_components/paper-button/paper-button.html">
-    <link rel="import" href="polymer/bower_components/ajax-parser/ajax-parser.html">
+ <link rel="import" href="/polymer/bower_components/file-select/file-select.html">
+ <link rel="import" href="/polymer/bower_components/iron-form/iron-form.html">
+  <link rel="import" href="/polymer/bower_components/paper-input/paper-input.html">
+  <link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+    <link rel="import" href="/polymer/bower_components/ajax-parser/ajax-parser.html">
  
  <ajax-parser jsonurl="/html/addimage/" method="POST" id="ajp"></ajax-parser>
    <form is="iron-form" id="form" method="post" enctype="multipart/form-data" action="/html/addimage">
@@ -19,11 +19,17 @@
       function submit()
       {
         
-         sajax().loadImage(document.getElementById("fimg"),'An Image', function(ob){
-         
+         sajax().loadFile(document.getElementById("fimg"), function(ob){
+        //console.log(ob);
          var json =  document.querySelector('#form').serialize(); 
+            
+           //pth = pth.substring(pth.lastIndexOf('/'));
+           var ftype = document.querySelector('#fimg').files[0].type;
         // var obj = JSON.parse(json);
-         json.imagedata= decodeURI(ob.imagedata);
+        console.log(ob.filedata);
+         json.imagedata= ob.filedata;
+         json.filetype = ftype;
+         json.filename=document.querySelector('#fimg').files[0].name;
           // console.log(json);
           document.querySelector('#ajp').jsonstring = json;
          document.querySelector('#ajp').rspelement  = document.getElementById("ptoast");
