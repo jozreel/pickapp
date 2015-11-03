@@ -8,7 +8,22 @@ var ajsloadable = function()
 	//console.log(this.html);
 }
 
-ajsloadable.prototype.view=function(view, args, resp,cache,replacespecial)
+ajsloadable.prototype.findbyconvention = function(path)
+{
+	var fs = require('fs');
+	try{
+	var ststsync = fs.statSync(path)
+	return true
+	}
+	catch(err)
+	{
+		console.log(err);
+		return false;
+		
+	}
+}
+
+ajsloadable.prototype.view=function(view, args, resp,caller,cache,replacespecial)
 {
 	
 	
@@ -16,10 +31,21 @@ ajsloadable.prototype.view=function(view, args, resp,cache,replacespecial)
 	//var res = 'hello';
 	var fs = require('fs');
 	
-	var path = cfg.viewpath + '/'+view+'.html';
-	path = pt.normalize(path);
+	this.findbyconvention(view);
+	var path ='';
+	var path1 = cfg.viewpath + '/shared/'+view+'.html';
+	var path2 = cfg.viewpath +'/'+caller+'/'+view+'.html';
+	path1 = pt.normalize(path1);
+	path2 = pt.normalize(path2);
 	var obj = this;
+	if(this.findbyconvention(path1))
+	   path = path1;
+	if(this.findbyconvention(path2))
+	   path = path2;
 	
+	
+	if(path !== '')
+	{
 	//cache file depending on weather values stored in dbase is different from values in file ... todo
 	if(cache == true)
 	{
@@ -64,6 +90,9 @@ ajsloadable.prototype.view=function(view, args, resp,cache,replacespecial)
 			 var dt = data.toString();
 			 var shtml = require('simple').shtml;
 			 dt =shtml.parse(dt);
+			 dt =shtml.inline(dt);
+			 //dt =shtml.block(dt);
+			
 			 //var pt= '/\{{(\w+)\}}/';
 			var ui=  obj.parse(vals,dt)
 			if(replacespecial ===true)
@@ -81,6 +110,12 @@ ajsloadable.prototype.view=function(view, args, resp,cache,replacespecial)
 		
 		 }
 		 ); 
+	}
+	}
+	else
+	{
+		resp.writeHead(404, {'Content-Type':'text/html'});
+	    resp.end("404 : content not found");
 	}		  
 			
 		//return res;	
@@ -172,13 +207,22 @@ ajsloadable.prototype.zoutput = function(resp,ui,fname)
 
 
 
-ajsloadable.prototype.loadviewpart=function(view,resp)
+ajsloadable.prototype.loadviewpart=function(view,resp,caller)
 {
 	//console.log(resp);
 	var obj = this;
 	var fs = require('fs');
-	var path = cfg.viewpath + '/'+view+'.html';
-	path = pt.normalize(path);
+	var path ='';
+	var path1 = cfg.viewpath + '/shared/'+view+'.html';
+	var path2 = cfg.viewpath +'/'+caller+'/'+view+'.html';
+	path1 = pt.normalize(path1);
+	path2 = pt.normalize(path2);
+	if(this.findbyconvention(path1))
+	   path = path1;
+	if(this.findbyconvention(path2))
+	   path = path2;
+	 if(path !== '')
+	 {
 	if((resp.cache !== undefined && !resp.cache.cacheFile(path,true)) || resp.cache === undefined)
 	{
 	 var res =fs.readFileSync(path);
@@ -191,7 +235,12 @@ ajsloadable.prototype.loadviewpart=function(view,resp)
 	}
 		
 	
-			  
+	 }
+	 else	
+	 {
+		 resp.writeHead(404, {'Content-Type':'text/html'});
+	     resp.end("404 : content not found");
+	 }	  
 	  
 			  
 			
@@ -227,10 +276,11 @@ ajsloadable.prototype.model = function(model)
 }
 ajsloadable.prototype.showintemplate =function(tempname,args,resp,cch)
 {
+	console.log('ioio');
 	if(cfg.templatable = true)
 	{
 		//var viewpath = cfg.viewpath+tempname;
-		this.view(tempname, args,resp,cch,true);
+		this.view(tempname, args,resp,'templates',cch,true);
 	}
 }
 module.exports = new ajsloadable();

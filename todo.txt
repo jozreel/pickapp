@@ -1,0 +1,17 @@
+add folders in view for each view
+
+search for a folder with the controlername from which the view is  passed 
+if it is not found search in the shared folder..
+
+
+create a redirect function for redirected content
+
+create functions for mimetypes javascript, file, text ,json ,notfound(got this one)
+
+render default content as text
+
+add a generic vier gynction to display views by searching.
+
+use eval in javascript to execute code followed by the $ sign. check on security on client side.
+
+use the $ sign folowed by any string of code or $sign folowed by { folowed by any lines of code folowed by }

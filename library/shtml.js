@@ -4,6 +4,85 @@ var shtml = function()
 
 }
 
+shtml.prototype.inline = function(dt)
+{
+	//console.log(dt);
+	return this.parseforeval(dt, /\$([\S]+[\);])/g);//  \$([\w\("'\.\+\-\*\/\^\%]+[);])
+}
+//work on this function has errors 
+shtml.prototype.block = function(dt)
+{
+	return this.parseforeval(dt,/\$\{\[([\s\S]*)[\]\}]/g);//\${([\w\s.\(\);"'\+\-\.\*\/\%\&\|.]*)}
+}
+shtml.prototype.parseforeval = function(dt,pattern)
+{
+	
+	var ui ='';
+	var cfg  = require('simple').config
+	var fs = require('fs');
+	var pt = require('path');
+	var i=0;
+	var ret = false;
+	ui = dt.toString().replace(pattern, function(x,y,z){	
+	   try{	 
+		   i++;
+		   var res = '';
+		   //\${([\w\s]*)}
+		    console.log(y);
+		     res =  eval(y);
+		    //console.log(res);
+		 // return res;
+		 // var path = cfg.viewpath + '/'+y+'.html';
+		 // path = pt.normalize(path);
+	     // var res =fs.readFileSync(path);
+	      if(res !==undefined)
+		    return res;
+		  
+		 //else
+		  // return '&nbsp';
+				 
+	   }
+	   catch(err){console.log('error',err);}
+				 
+			 });
+	
+	 if(ui !== undefined)
+	 {
+	  
+	  if(i!==0 )
+	     ui = this.parseforeval(ui);
+	  
+      return ui;
+	  
+	 }
+	 else return '';
+}
+
+shtml.prototype.loadpart =function()
+{
+	
+}
+
+
+var getviewpart= function(vname)
+{
+	var ui ='';
+	var cfg  = require('simple').config
+	var fs = require('fs');
+	var pt = require('path');
+	var i=0;
+	var ret = false;
+	
+		  var path = cfg.viewpath+vname+'.html';
+		  path = pt.normalize(path);
+	     var res =fs.readFileSync(path);
+	     if(res !== undefined)
+		  return res.toString();
+		 else
+		   return '&nbsp';
+				
+}
+
 shtml.prototype.parse = function(dt)
 {
 	var ui ='';

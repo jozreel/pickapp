@@ -3,6 +3,7 @@ var simplecontroler = function ()
 {
 	//console.log('control');
    this.req=null;
+   this.viewholder =[];
    
    
 }
@@ -22,8 +23,8 @@ simplecontroler.prototype.writeres= function(txt)
 }
 simplecontroler.prototype.loadview = function(vw,args,res)
 {
-	 //console.log('hi');
-		return this.load.view(vw,args,res);
+	   //console.log(this.req.method);
+		return this.load.view(vw,args,res,this.req.ctr);
 	
 	
 }
