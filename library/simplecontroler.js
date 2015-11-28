@@ -3,7 +3,8 @@ var simplecontroler = function ()
 {
 	//console.log('control');
    this.req=null;
-   this.viewholder =[];
+   this.resp=null;
+   
    
    
 }
@@ -13,7 +14,18 @@ simplecontroler.prototype.create= function(resp,req)
   this.res = resp;
   this.req=req
   this.load  = require('./ajsload');
-  
+  this.viewholder ={};
+  var host='';
+   var prt = this.req.headers.host.indexOf(':');
+   if(prt !==-1)
+  {
+	  this.req.hostname = this.req.headers.host.substring(0,prt);
+	 
+  }
+  else
+  {
+	  this.req.hostname = this.req.headers.host;
+  }
   
 }
 simplecontroler.prototype.writeres= function(txt)
@@ -21,10 +33,10 @@ simplecontroler.prototype.writeres= function(txt)
 	//console.log(this.req);
  this.res.write(txt);
 }
-simplecontroler.prototype.loadview = function(vw,args,res)
+simplecontroler.prototype.loadview = function(vw)
 {
-	   //console.log(this.req.method);
-		return this.load.view(vw,args,res,this.req.ctr);
+	   // console.log(this.viewholder);
+		return this.load.view(vw,this.viewholder,this.res,this.req);
 	
 	
 }
@@ -32,15 +44,15 @@ simplecontroler.prototype.loadview = function(vw,args,res)
 simplecontroler.prototype.loadviewpart = function(view)
 {
 	 //console.log('hi');
-		return this.load.loadviewpart(view,this.res);
+		return this.load.loadviewpart(view,this.res,this.req);
 	
 	
 }
 
-simplecontroler.prototype.showviews = function(args,res)
+simplecontroler.prototype.showviews = function(res)
 {
 	 //console.log('hi');
-		return this.load.showLoadedViews(args,res);
+		return this.load.showLoadedViews(this.viewholder,res);
 	
 	
 }
@@ -53,11 +65,17 @@ simplecontroler.prototype.loadmodel = function(name)
 	
 }
 
+simplecontroler.prototype.setSocket =function(sock)
+{
+	//console.log(sock);
+	this.socket = sock;
+}
+
 simplecontroler.prototype.jsonResp =function(r)
 {
 	
-       
-	   this.res.writeHead(200, {'Content-Type':'text/plain'});
+      
+	   this.res.writeHead(200, {'Content-Type':'text/json'});
 	   var jsn = JSON.stringify(r);
 	   
 	    this.res.end(jsn);
@@ -89,6 +107,30 @@ simplecontroler.prototype.showtemplate =function()
 		);
 		
 	}
+}
+
+simplecontroler.prototype.isencrypted=function(){
+	 if(this.req.connection.encrypted !==undefined)
+	    return true;
+	 else 
+	   return false;
+}
+
+simplecontroler.prototype.requesthttps = function(hname,pth,options)
+{
+	console.log('url',pth);
+	var http = require('https');
+	var opt = {};
+if(options !==null)
+    opt =options;
+else
+  opt  = {
+  hostname: hname,
+  port: 80,
+  path: pth,
+  method: 'POST',
+  }
+  var req = http.request(options, function(res) {});
 }
 
 module.exports = simplecontroler;

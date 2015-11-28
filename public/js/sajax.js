@@ -682,7 +682,7 @@ function _abjax (){
 		}
 		//add oatrameter to this function that accepts the function to be executed;
 		this.readystate = function(callback)
-		{//  alert('we ready to roll');
+		{ //alert('we ready to roll');
 		  
 			var  interval = setInterval(function(){
 				if(document.readyState === "complete")
@@ -1181,7 +1181,7 @@ this.clearForm =function(bval)
   if(!bval)
     this._element.reset();
   //enableedit(true);
-  var arch = fm.childNodes;
+ /* var arch = this._element.childNodes;
   for(var it in arch)
         {
      
@@ -1191,13 +1191,13 @@ this.clearForm =function(bval)
         if(elms.indexOf(arch[it].tagName.toLowerCase()) != -1)
         {
          // console.log(boolval);
-         this.clearform(true)
+         this.clearForm(true)
         }
        
       arch[it].reset();
         
       }
-		}
+		}*/
   
 //  document.querySelector('#unit').reset();
  // document.querySelector('#cat').reset();
@@ -1218,7 +1218,7 @@ this.clearForm =function(bval)
                 if (!files[i].type.match(imageType)) {
                   throw "File Type must be an image";
                     }
-                    reader.readAsDataURL(files[i]);
+                    reader.readAsBinaryString(files[i]);
               
 
               }
@@ -1229,11 +1229,10 @@ this.clearForm =function(bval)
 		  var read = 0;
 		  var obj={}
 		  reader.onloadend = function(){
-           //console.log(read);
+           
              read++;
-          var ig =encodeURI(reader.result);
-    
-            obj= {alt:alt, imagedata:encodeURI(ig)};
+          var ig =reader.result;
+            obj= {alt:alt, imagedata:ig};
            jsn.push(obj);
 		   
 		   if(read === files.length)
@@ -1315,6 +1314,7 @@ this.clearForm =function(bval)
 	
 	this.disable = function(val)
 	{
+		
 		if(this._element !==null)
 		  this._element.disabled = val;
 	}

@@ -24,23 +24,45 @@ simplemodel.prototype.save = function(callback, event)
   
 }
 
-simplemodel.prototype.checkecnoded =function(str)
-{
-  var retstr="";
-  var regx = new RegExp(/%\d[\dA-F]/g);
-		if(regx.test(str))
-		{
-		  
-     retstr= str;
-        //widget.innerHtm = obj.htm;
-			//console.log('hi');
-		}
-    else
+
+simplemodel.prototype.decodeallValues = function(doc)
+{var obj;
+ 
+  for(var val in doc)
+  {
+    
+    if(typeof doc[val] ==='object')
     {
-      retstr =encodeURI(str);
+      this.decodeallValues( doc[val]);
     }
-    return retstr;
+    else if(typeof doc[val] !== 'function')
+    {
+     
+     doc[val] = this.checkanddecode(doc[val]);
+    // console.log(val);
+    }
+   //if(typeof obj !== 'undefined')
+    //doc[val] = obj;
+    
+    
+  }
+  return doc;
 }
+
+simplemodel.prototype.convertobase64 =function(data)
+{
+   var b ='';
+   var Buffer =require('buffer').Buffer;
+   var bff;
+  if(data !=undefined && typeof data === 'string')
+    {
+     b= new Buffer(data,'binary').toString('base64');;
+    
+    }
+   
+  return b;
+}
+
 
 simplemodel.prototype.prepare =function()
 {
@@ -64,17 +86,71 @@ simplemodel.prototype.deleteone = function(callback)
   this.removeone({_id:objid},callback);
 }
 
-simplemodel.prototype.gridsave = function(fdata,callback)
+simplemodel.prototype.gridsave = function(fdata,callback,event)
 {
    var temp =this.prepare();
    //console.log(this);
    //delete temp._id;
    //console.log(temp);
    
-     this.savetogrid(fdata,temp,callback);
+     this.savetogrid(fdata,temp,callback,event);
+}
+
+simplemodel.prototype.checksendtogrid= function(size,ll)
+{
+  if(size > 1600000.0)
+    return true;
+   else
+     return false;
+    
+}
+
+simplemodel.prototype.checkanddecode =function(str)
+{
+ 
+  var retstr="";
+  try{
+  var regx = new RegExp(/%\d[\dA-F]/g);
+  var test =regx.test(str);
+ 
+		if(test)
+		{
+		
+     retstr= decodeURIComponent(str);
+        //widget.innerHtm = obj.htm;
+			//console.log('hi');
+      
+		}
+    else
+    {
+      retstr =str;
+    }
+  }
+  catch(err)
+  {
+    console.log(err);
+  }
+    return retstr;
 }
 
 
+simplemodel.prototype.checkencoded =function(str)
+{
+  var retstr="";
+  var regx = new RegExp(/%\d[\dA-F]/g);
+		if(regx.test(str))
+		{
+		  
+     retstr= str;
+        //widget.innerHtm = obj.htm;
+			//console.log('hi');
+		}
+    else
+    {
+      retstr =encodeURIComponent(str);
+    }
+    return retstr;
+}
 
 
 

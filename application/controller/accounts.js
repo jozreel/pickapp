@@ -64,6 +64,7 @@ accounts.accounts = function()
 }
 accounts.index = function()
 {
+	this.req.session.refresh();
 	var v = this.loadview('accountslanding',{title:"Account categories"}, this.res);
 }
 

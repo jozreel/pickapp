@@ -1,0 +1,47 @@
+<html>
+   <head>
+       <meta charset="UTF-8">
+       <title>{{title}}</title>
+        <script src="/polymer/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+         <link rel="import" href="/polymer/bower_components/paper-styles/color.html">
+          <link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+          <link rel="import" href="/polymer/bower_components/gold-email-input/gold-email-input.html">
+          <link rel="import" href="/polymer/bower_components/paper-input/paper-input.html">
+           <link rel="import" href="/polymer/bower_components/ajax-parser/ajax-parser.html">
+           <link rel="import" href="/polymer/bower_components/iron-form/iron-form.html">
+   </head>  
+   <body>   
+          <div style="margin:200 auto; width:400px; border:1px solid #B3E5FC; padding:100px 50px 100px 50px; border-radius:5px; background:#FAFAFA;">
+             <form  method="post" enctype="multipart/form-data" action="auth">
+              <gold-email-input name="username" label="your email address" auto-validate  required error-message="Please enter a valid email" id ="email" value ="jozreel@live.com"></gold-email-input>
+              <paper-input name="password" label="password"  type="password" id="passwd" required></paper-input>
+              <paper-button onclick="validate()" style="background: green;">login</paper-button>
+              
+             </form>
+              <span style="float:right;"><a href="/user/add">register</a></span>
+              </div>
+             <ajax-parser method="POST"  id="ajp"></ajax-parser>
+              <script>
+                  function validate()
+                  {
+                   if(document.querySelector('#email').validate() && document.querySelector('#passwd').validate())
+                   {
+                      document.querySelector('form').submit();
+                   
+                      // alert('valid');
+                    /*   var obj ={username:document.querySelector('#email').value,password:document.querySelector('#passwd').value};
+                     console.log(JSON.stringify(obj));
+                      document.querySelector('#ajp').jsonurl = '/user/auth';
+                       document.querySelector('#ajp').jsonstring  =  JSON.stringify(obj); 
+                       document.querySelector('#ajp').respfunc=function(r){console.log('jojo');};
+                           document.querySelector('#ajp').submit=true;
+                           */
+                             
+                      
+                   }
+                   else
+                      return false;
+                  }
+                  </script>
+   </body>
+</html>

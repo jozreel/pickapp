@@ -1,22 +1,22 @@
-
+var reqarr;
 var shtml = function()
 {
-
+   
 }
 
 shtml.prototype.inline = function(dt)
 {
-	//console.log(dt);
-	return this.parseforeval(dt, /\$([\S]+[\);])/g);//  \$([\w\("'\.\+\-\*\/\^\%]+[);])
+	
+	return this.parseforeval(dt, /\$(?!\{)([\S]+[\);])/g);//  \$([\w\("'\.\+\-\*\/\^\%]+[);])    /\$([\S]+[\);])/g
 }
 //work on this function has errors 
 shtml.prototype.block = function(dt)
 {
-	return this.parseforeval(dt,/\$\{\[([\s\S]*)[\]\}]/g);//\${([\w\s.\(\);"'\+\-\.\*\/\%\&\|.]*)}
+	return this.parseforeval(dt,/\$\{([\S\r\n]+)\}/g);//\${([\w\s.\(\);"'\+\-\.\*\/\%\&\|.]*)}
 }
 shtml.prototype.parseforeval = function(dt,pattern)
 {
-	
+	reqarr = this.req.viewpath;;
 	var ui ='';
 	var cfg  = require('simple').config
 	var fs = require('fs');
@@ -73,14 +73,25 @@ var getviewpart= function(vname)
 	var i=0;
 	var ret = false;
 	
-		  var path = cfg.viewpath+vname+'.html';
+	var path = reqarr(vname);
+	
+	if(path !== '')
+	{
+		 // var path = cfg.viewpath+vname+'.html';
 		  path = pt.normalize(path);
 	     var res =fs.readFileSync(path);
 	     if(res !== undefined)
 		  return res.toString();
 		 else
 		   return '&nbsp';
+	}
 				
+}
+
+
+var print = function(text)
+{
+	return text;
 }
 
 shtml.prototype.parse = function(dt)
@@ -96,13 +107,15 @@ shtml.prototype.parse = function(dt)
 		   i++;
 		  // console.log(y);
 		   
-		  var path = cfg.viewpath + '/'+y+'.html';
-		  path = pt.normalize(path);
+        var path = reqarr(y);
+	   if(path !== '')
+	    {
 	     var res =fs.readFileSync(path);
 	     if(res !== undefined)
 		  return res.toString();
 		 else
 		   return '&nbsp';
+		   }
 				 
 	   }
 	   catch(err){console.log(err);}
@@ -170,7 +183,7 @@ shtml.prototype.parseother = function(dt, partern,callback)
 	ui = dt.replace(partern, function(x,y,z){	
 	   try{	 
 		   i++;
-		   console.log(y);
+		  
 		  return callback(y) 
 		 // var path = cfg[y];
 		  //path = pt.normalize(path);

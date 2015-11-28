@@ -15,7 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </style>
   <template>
     <div id="content"></div>
-      <iron-ajax url="{{dataurl}}" on-response="handleresponse" auto="true" id="ajaxhnd"> </iron-ajax>
+      <iron-ajax url="{{dataurl}}" on-response="handleresponse" auto="true" id="ajaxhnd" debounce-duration='300'> </iron-ajax>
   </template>
 </dom-module>
 

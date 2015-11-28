@@ -1,6 +1,8 @@
+
+<link rel="import" href="../iron-ajax/iron-ajax.html">
 <dom-module id="ajax-req">
 <template>
-     <iron-ajax url="{{dataurl}}" on-response="_handleResp" id="ajaxrq"> </iron-ajax>
+     <iron-ajax url="{{dataurl}}" on-response="_handleResp" id="ajaxrq" auto debounce-duration="300"> </iron-ajax>
  </template>
   
   </dom-module>
@@ -24,7 +26,7 @@
           {
            
            this.$.ajaxrq.url=this.dataurl;
-           this.$.ajaxrq.generateRequest();
+          // this.$.ajaxrq.generateRequest();
       // Polymer.dom(this.$.ajaxhnd).generateRequest();
    //while(Polymer.dom(this.root).querySelector('iron-ajax').loading===true)
       //console.log(Polymer.dom(this.root).querySelector('iron-ajax').loading);
@@ -38,7 +40,7 @@
     },
      _handleResp:function(e)
     { 
-      
+     
       if(e.detail === this.$.ajaxrq.lastRequest)
        {
          console.log(this.respfunc);

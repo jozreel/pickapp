@@ -114,6 +114,40 @@ mongodriver.prototype.removeone = function(cat, callback)
   
 }
 
+mongodriver.prototype.removegroup = function(needle, catarr, callback)
+{
+  var pp='po';
+  var conob ={};
+  conob[needle]={$in:catarr}
+  var res = {};
+  res.success=true;
+  var obj1 = this;
+  this.MongoClient.connect(this.connectionString, function(err, db)
+  {
+   if(err)
+       throw err;
+    var collection = db.collection(obj1.modelname);
+    collection.deleteMany(conob,
+      function(err, results) {
+        try{
+        if(err)
+        {
+           console.log(err)
+           res.error = err;
+           res.success = false;
+        }
+         
+         res.results = results;
+         callback(res);
+        }
+        catch(error){console.log(error);}
+      }
+   );
+  }
+  );
+  
+}
+
 mongodriver.prototype.insert = function(obj,callback)
 {
   //console.log(typeof callback);
@@ -218,7 +252,7 @@ mongodriver.prototype.replace=function(id, rep)
 }
 
 
-mongodriver.prototype.savetogrid = function(filebuff,fdata,callback)
+mongodriver.prototype.savetogrid = function(filebuff,fdata,callback,event)
 {
   //console.log(callback);
   var Buffer = require('buffer');
@@ -278,7 +312,14 @@ mongodriver.prototype.savetogrid = function(filebuff,fdata,callback)
         //var collection = db.collection(obj1.modelname);
         fdata.gridid = result._id;
         
-        obj1.insert(fdata,callback);
+        if(event ==='A' || event === null|| event === undefined) 
+          obj1.insert(fdata,callback);
+        if(event === 'E')
+        {
+          var objid = obj1.createObjectId(obj1._id)
+            delete obj1._id;
+            obj1.updateOne({_id:objid.id},fdata, callback);
+        }
        // console.log(fdata);
         db.close();
        }
@@ -465,19 +506,24 @@ mongodriver.prototype.getfromgrid = function(fileid, callback)
 
 
 
-mongodriver.prototype.find = function(cond,opt, coll,callback)
+mongodriver.prototype.find = function(cond,fields,opt, coll,callback)
 {
-  //console.log(cond);
+  
+  console.log(opt);
   var obj = this;
   this.MongoClient.connect(this.connectionString, function(err, db)
   {
    if(err)
        throw err;
    // console.log(opt);
+   if(opt === null)
+     opt={};
+    if(fields===null)
+     fields={};
     var collection = db.collection(obj.modelname);
     if(opt!==null)
     {
-        collection.find(cond,opt).count(function(err,count){ 
+        collection.find(cond,fields,opt).count(function(err,count){ 
           if(err)
             {
               throw err;
@@ -496,7 +542,7 @@ mongodriver.prototype.find = function(cond,opt, coll,callback)
     }
      else if(opt===null)
      {
-        collection.find(cond).count(function(err,count){ 
+        collection.find(cond,fields,opt).count(function(err,count){ 
           if(count >0){
             
             var cursor = collection.find(cond);  obj.traverseCursor(cursor,db, callback,count,coll);
@@ -793,6 +839,7 @@ mongodriver.prototype.getMappedObject = function(obj)
    return temp;
 }
  
+
 
 
 module.exports =  mongodriver;

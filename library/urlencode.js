@@ -5,7 +5,7 @@ var urlencode = function(req, res)
 }
 
 
-urlencode.prototype.checkandecnod =function(str)
+urlencode.prototype.checkandencode =function(str)
 {
   var retstr="";
   var regx = new RegExp(/%\d[\dA-F]/g);

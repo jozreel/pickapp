@@ -14,7 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <div id="content"></div>
     
-      <iron-ajax  content-type = "application/json"  id = 'ajxiron' method='[[method]]' url="[[jsonurl]]"  debounce-duration='300' on-response="handleResp">
+      <iron-ajax  content-type = "application/json"  id = 'ajxiron' method='[[method]]' url="[[jsonurl]]"  debounce-duration='300' on-response="handleResp" >
   </template>
 </dom-module>
 
@@ -30,10 +30,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          // observer: 'sizeChanged'
         },
         jsonstring:{type: String, value: '{"has":"none"}'},
-        jsonurl:{type:String, value:'localhost'},
+        jsonurl:{type:String, observer:'_urlchanged'},
         respfunc:Object,
         rspelement:Object,
-      submit:{type:Boolean, value:false, observer:'submitChange'}
+      submit:{type:Boolean, value:false, observer:'submitChange'},
+      auto:{type:Boolean, value:false, observer:'_changeAuto'}
       },
      
 
@@ -48,6 +49,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         
       },
+      _urlchanged:function()
+      {
+       if(this.auto)
+        this.$.ajxiron.body = this.jsonstring;
+      },
     handleResp:function(e)
     {    
       
@@ -55,6 +61,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        
       this.respfunc(stringf, this.rspelement);
      
+    },
+    _changeAuto:function()
+    {
+      this.$.ajxiron.auto = this.auto ? true :false;
     }
     });
 </script>

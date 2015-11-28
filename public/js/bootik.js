@@ -35,6 +35,7 @@ function resp(str,elem)
      else
        elem.innerHTML =str.error;
    elem.show();
+   sajax('#form').clearForm();
 }
 
 function setEvent(ev)
@@ -46,11 +47,12 @@ function setEvent(ev)
 function deleteobj(apaser)
 {
   
-    apaser.jsonstring = '{"_id":"'+document.getElementById('_id').value+'"}';
+    //apaser.jsonstring = jstring;
         apaser.rspelement  = document.getElementById("ptoast");
-         
+        
          apaser.respfunc=resp;
          apaser.submit=true;
+        // console.log(apaser.jsonstring);
   //apaser.
 }
  function toHTML(txt)
@@ -72,6 +74,59 @@ function deleteobj(apaser)
  {
    return str.replace(/(<[^<>]+>)/g,'')
  }
+ 
+ 
+ function search(e,url)
+   {
+   
+       e = e || window.event;
+        if (e.keyCode == 13)
+        {
+          
+           var val = encodeURI(document.querySelector('#search').value);
+          
+          
+           var lst = document.getElementById('idd');
+       
+           
+           
+             lst.dataUrl =  url+val;
+           
+           
+           
+          
+         //  return false;
+        }
+       // return true;
+   }
+  function displaySearch()
+   {
+     var search = document.getElementById("search");
+     search.style.display = "inline-block";
+   }
+ 
+ 
+   function scrollHandler(element,functionCall)
+   {
+     
+      element.onscroll =function(event){
+     var scroller = event.target;
+     
+    if (scroller.clientHeight + scroller.scrollTop  === scroller.scrollHeight)
+    {     //alert('lplpl')
+          //element.scroller.style.overflow = "hidden";
+          
+          functionCall();
+    }
+           
+     
+    
+   
+    // console.log(document.documentElement.clientHeight);
+    
+    }
+   }
+ 
  
  
  

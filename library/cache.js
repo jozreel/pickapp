@@ -49,7 +49,7 @@ cache.prototype.cacheFile=function(fname, isview)
 	}
 }
 
-cache.prototype.writemime =function(ext, data,fname,mime,isview)
+cache.prototype.writemime =function(ext,fname,mime,isview)
 {
 	
 	try{
@@ -91,7 +91,7 @@ cache.prototype.writemime =function(ext, data,fname,mime,isview)
 	//console.log(this.res);
 	//this.res.writeHead(200, {'Content-Type':mime+'/'+ext});
 	
-	if(this.res.compress !==undefined && this.res.compress.compress === true)
+	/*if(this.res.compress !==undefined && this.res.compress.compress === true)
 			 {
 				  var zlib = require('zlib');
 				  //var raw = fs.createReadStream('index.html');
@@ -131,7 +131,7 @@ cache.prototype.writemime =function(ext, data,fname,mime,isview)
 	           this.res.end(data, 'binary');
 	           else
 	           this.res.end(data.toString());
-			 }
+			 } */
 	}
 	catch(err)
 	{

@@ -1,0 +1,184 @@
+
+ $getviewpart('clientheader')
+  <link rel="import" href="/polymer/bower_components/paper-toolbar/paper-toolbar.html">
+      <link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+      <link rel="import" href="/polymer/bower_components/paper-tooltip/paper-tooltip.html">
+    <link rel="import" href="/polymer/bower_components/neon-animation/neon-animations.html">
+   
+   <link rel="import" href="/polymer/bower_components/paper-card/paper-card.html">
+    <link rel="import" href="/polymer/bower_components/ajax-parser/ajax-req.html">
+    <link rel="import" href="/polymer/bower_components/ajax-parser/ajax-parser.html">
+    <link rel="import" href="/polymer/bower_components/paper-dialog/paper-dialog.html">
+     <link rel="import" href="/polymer/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+  
+  <input type="hidden" value="0" id="skip" />
+  <ajax-req  id="instore"></ajax-req>       
+  <div class="content fit">
+    
+    <div class="content_client">
+    <!--  <div class="leftdraw">
+       
+      </div>-->
+      <div class="feature">
+        <img src="/image/sh.jpg" />
+       </div>
+      <div class="shelf" id="threecols">
+      <!--<div class="col" id="first"> 
+      </div
+      <div class="col" id="second"> 
+      </div> 
+      <div class="col" id="third"> -->
+      </div> 
+      </div>
+    </div>
+    </div>
+  </div>
+ 
+    <ajax-parser id="updatecart"></ajax-parser>
+     <ajax-req id="getcart"></ajax-req>
+ </paper-header-panel>
+  <div class="scrollanimation">
+ </div>
+  <paper-dialog id="itemdialog" class="itemdialog"  entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
+    <h2 id="itemname">Item Info</h2>
+    <p id="itemprice"></p>
+    <div class="buttons">
+    
+    <div><paper-button dialog-confirm class="greenbutton"  onclick="updatecart(event)"><iron-icon icon="icons:add-shopping-cart"></iron-icon></paper-button><paper-tooltip>Add to cart</paper-tooltip></div>
+    <paper-button dialog-dismiss class="greenbutton">CLOSE</paper-button>
+  </div>
+   <div class= "dialogimage"><img id="itemimage" /> </div>
+  <paper-dialog-scrollable>
+   
+   <div style="padding:20; display:block;"><p id="itemdescription"></p></div>
+  </paper-dialog-scrollable>
+  
+    <input type="hidden" id="_id" name="_id" />
+    </paper-dialog>
+ <script> 
+ window.addEventListener('WebComponentsReady', function(){
+    document.querySelector('#instore').respfunc = createAll;
+  document.querySelector('#instore').dataurl = "/inventory/page/0";
+  
+  scrollHandler(document.getElementById('php').scroller, function()
+  {
+   
+  document.querySelector('.scrollanimation').style.opacity='0.5';
+ 
+  document.querySelector('#instore').respfunc = createAll;
+  document.querySelector('#instore').dataurl = "";
+  
+  document.querySelector('#instore').dataurl = "/inventory/page/"+document.getElementById('skip').value;
+  
+  //document.getElementById('skip').value = temp;
+   
+  }
+  );
+ }); 
+ 
+  
+  function createAll(doc)
+  {
+     document.getElementById('getcart').dataurl = '/inventory/getcartitems/';
+     document.getElementById('getcart').respfunc= updatebadge;
+   var i=0;
+   for(var docitem in doc)
+   {
+     
+    i++;
+     var image = "";
+     if(doc[docitem].image!=undefined)
+         image = 'data:'+doc[docitem].image.type+';base64,'+doc[docitem].image.imagedata;
+   var ele = document.createElement('div');
+  
+   ele.className="shelfitem";
+/*   ele.innerHTML ='<paper-card elevation="1" class="fancy">'+
+             '<div><img class="hand itemimage" src="'+image+'" onclick="dialogpop(event)" /></div>'+
+             '<div class="card-content">'+
+             '<div class="big hand itemname" onclick="dialogpop(event)">'+doc[docitem].name+'</div>'+
+             '</div>'+
+              '<div class="card-content">'+
+              ' <div class="titletop">'+
+                  '<div class="medium">'+doc[docitem].desc+'</div>'+
+                '</div>'+
+                '<div class="titletop">'+
+                  '<div  class="medium price">$'+doc[docitem].uprice+'</div>'+
+                '</div>'+
+                '</div>'+
+                '<input type="hidden" name="itemlongdesc" class="itemlongdesc" value="'+doc[docitem].longdesc+'" />'+
+                '<input type="hidden" name="_id" class="_id" value="'+doc[docitem]._id+'" />'+
+          '</paper-card>';
+          */
+         ele.innerHTML ='<div class="itemcard">'+
+             '<div><img class="hand itemimage" src="'+image+'" onclick="dialogpop(event)" /></div>'+
+             '<div>'+
+             '<div class="itemtitle hand itemname" onclick="dialogpop(event)">'+doc[docitem].name+'</div>'+
+             '</div>'+
+              '<div >'+
+              ' <div>'+
+                  '<div>'+doc[docitem].desc+'</div>'+
+                '</div>'+
+                '<div>'+
+                  '<div  class="medium itemprice price">&#36;'+parseFloat(doc[docitem].uprice).toFixed(2)+'</div>'+
+                '</div>'+
+                '</div>'+
+                '<input type="hidden" name="itemlongdesc" class="itemlongdesc" value="'+doc[docitem].longdesc+'" />'+
+                '<input type="hidden" name="_id" class="_id" value="'+doc[docitem]._id+'" />'+
+          '</div>';
+       // if(i === 1)
+        //   document.getElementById('first').appendChild(ele);
+        // else if(i=== 2)
+         ////  document.getElementById('second').appendChild(ele);
+         // else if( i=== 3)
+          // document.getElementById('third').appendChild(ele);
+       // if(i===3)
+        //  i=0; 
+         
+     document.getElementById('threecols').appendChild(ele);
+     
+     
+      
+   }
+      if(doc.length)
+         document.querySelector('.content').style.height=  document.querySelector('.content_client').offsetHeight+'px';
+       
+  // alert(document.querySelector('#mainContainer').offsetHeight+'px');
+    var temp =  parseInt(document.getElementById('skip').value)+3
+    document.getElementById('skip').value = temp;
+    document.querySelector('.scrollanimation').style.opacity='0';
+    
+  }
+  
+  function dialogpop(event)
+  {
+     
+     ele = event.target.parentElement.parentElement;
+     document.querySelector('#itemimage').src = ele.querySelector('.itemimage').src;
+     document.querySelector('#itemdescription').innerHTML = ele.querySelector('.itemlongdesc').value;
+      document.querySelector('#itemprice').innerHTML = ele.querySelector('.price').innerHTML;
+       document.querySelector('#itemname').innerHTML = ele.querySelector('.itemname').innerHTML;
+         document.querySelector('#_id').value = ele.querySelector('._id').value;
+
+     document.getElementById('itemdialog').open();
+   
+  }
+  
+  function updatecart(event)
+  {
+     document.querySelector('#updatecart').submit=false;
+    document.querySelector('#updatecart').respfunc = updatebadge;
+    document.querySelector('#updatecart').jsonstring = '{"event":"A", "cartdata":{"itemid":"'+ document.querySelector('#_id').value+'"}}';
+    document.querySelector('#updatecart').jsonurl="/inventory/updatecart/";
+    document.querySelector('#updatecart').submit=true;
+    
+  }
+  
+  function updatebadge(doc)
+  {
+    console.log(doc);
+    document.querySelector('#badge').label= doc.count;
+  }
+ 
+   </script>
+  
+$getviewpart('clientfooter');

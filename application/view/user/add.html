@@ -1,0 +1,54 @@
+<html>
+   <head>
+       <title>{{title}}</title>
+       <script src="/polymer/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<link rel="import" href="/polymer/bower_components/paper-styles/color.html">
+          <link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+          <link rel="import" href="/polymer/bower_components/gold-email-input/gold-email-input.html">
+          <link rel="import" href="/polymer/bower_components/paper-input/paper-input.html">
+           <link rel="import" href="/polymer/bower_components/ajax-parser/ajax-parser.html">
+   </head>  
+   <body>   
+      <a href="/user/logout">logout</a>
+          <div style="margin:200 auto; width:400px; border:1px solid #B3E5FC; padding:100px 50px 100px 50px; border-radius:5px; background:#FAFAFA;">
+              <gold-email-input label="your email address" auto-validate  required error-message="Please enter a valid email" id ="email"></gold-email-input>
+              <paper-input label="password"  type="password" id="passwd" required ></paper-input>
+			   <paper-input label="repeat password"  type="password" id="passwdr" required ></paper-input>
+              <paper-button onclick="validate()" style="background: green;">register</paper-button>
+			  <p id="wn"></p>
+              </div>
+             <ajax-parser method="POST"  id="ajp"></ajax-parser>
+              <script>
+                  function validate()
+                  {
+                   if(document.querySelector('#email').validate() && document.querySelector('#passwd').validate() && document.querySelector('#passwdr').validate())
+                   {
+					 if(document.querySelector('#passwd').value ===  document.querySelector('#passwdr').value)
+					 {        	 document.querySelector('#wn').innerHTML='';
+                     var obj ={username:document.querySelector('#email').value,password:document.querySelector('#passwd').value,passwordr:document.querySelector('#passwdr').value};
+                     console.log(JSON.stringify(obj));
+                      document.querySelector('#ajp').jsonurl = '/user/passdata';
+                       document.querySelector('#ajp').jsonstring  =  JSON.stringify(obj); 
+                        document.querySelector('#ajp').respfunc  = resp; 
+                           document.querySelector('#ajp').submit=true
+					 }
+					 else
+					 {
+              
+						 document.querySelector('#wn').innerHTML = "Passwords do not match";
+					 }
+                      
+                   }
+                  }
+                  
+                  
+                function resp(r)
+                {
+                  if(r.success = true)
+                  {
+                    alert('success');
+                  }
+                }
+                  </script>
+   </body>
+</html>

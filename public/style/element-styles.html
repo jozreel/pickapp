@@ -67,30 +67,46 @@
       paper-header-panel {
         float: left;
         width: 100%;
-        height:100%x;
+        height: 100%;
+   
         margin: 0;
-        @apply(--shadow-elevation-2dp);
+        @apply(--shadow-elevation-1dp);
+       
+       }
+      
+      .content {
+       
       }
+      
       .paper-header {
         height: 40px;
         font-size: 16px;
         line-height: 60px;
         padding: 0 0 20px 0;
-        color: white;
+        color: #424242;
         transition: height 0.2s;
-       
+         border: none;
+        
+         
+        
       }
+      
       .paper-header.tall {
         height: 120px;
       }
       .paper-header.medium-tall {
-        height: 100px;
+        height: 120px;
         line-height: 50px;
+       
+        background-color: var(--paper-grey-50);
+       
+       
+       
       }
-      .content {
-        height: 100%;
-         margin-top: 10px;
-      }
+      
+      
+     
+      
       .cover {
         margin: 60px;
       }
@@ -115,6 +131,18 @@
       .pink .paper-header {
         background-color: var(--paper-pink-a200);
       }
+      
+      .plain .paper-header {
+       
+       
+      }
+      
+      
+      
+       
+       .lightgreen .paper-header {
+        background-color: var(--paper-light-green-500);
+      }
       /* TODO: replace these with background: linear-gradient(white, var(...))
        when custom properties allow it */
       .blue .content {
@@ -127,7 +155,7 @@
         background: linear-gradient(var(--paper-grey-50), #ffffff);
       }
       .green .content {
-        background: linear-gradient(white, #c8e6c9);
+        background: linear-gradient(white, var(--paper-grey-50));
       }
       .cyan .content {
         background: linear-gradient(white, #b2ebf2);
@@ -138,6 +166,11 @@
       .pink .content {
         background: linear-gradient(white, #f8bbd0);
       }
+      
+       .plain .content {
+        background: linear-gradient(var(--paper-grey-50), white);
+      }
+      .lightgreen .content{background: #ffffff;}
       
       .avatar {
       display: inline-block;
@@ -157,11 +190,24 @@
       float:left;
       margin:10px;
      
-      
-     
      
      
     }
+    
+    .lightbrown {background: #EFEBE9;}
+    
+    .brown
+     {
+    --paper-toolbar-background: var(--paper-brown-500);
+    }
+    
+     .white
+     {
+      background: transparent;
+      color:#000000;
+    }
+     
+   
 
         paper-card {
       width: 100%;
@@ -180,6 +226,12 @@
       left: 100px;
       color: var(--paper-indigo-500);
     }
+    
+     .fancy .titletop {
+       font-size: 42px !important;
+      color: var(--paper-indigo-500);
+       padding: 8px 0 16px;
+    }
     .fancy img {
       width: 100%;
     }
@@ -195,8 +247,20 @@
     .pink {
       --paper-card-header-color: var(--paper-pink-500);
     }
+    
+     .blackback {
+      --paper-card-header-color: var(--paper-white-500);
+    
+      
+    }
 
-   body{background-color: var(--paper-grey-50);}  
+   .bigicon {
+    --iron-icon-height: 32px;
+    --iron-icon-width: 32px;
+  }
+  
+  .greenbutton{background: var(--paper-lime-500);}
+   body{background-color: var(--paper-white-50);}  
    
  </style>
   

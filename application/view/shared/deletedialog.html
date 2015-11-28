@@ -1,0 +1,12 @@
+<link rel="import" href="/polymer/bower_components/neon-animation/neon-animations.html"> 
+ <link rel="import" href="/polymer/bower_components/paper-dialog/paper-dialog.html">
+<paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation" id ='pd'>
+  <h2>ARE YOU SURE</h2>
+  <paper-dialog-scrollable>
+   Are you sure you want to delete
+  </paper-dialog-scrollable>
+  <div class="buttons">
+    <paper-button dialog-dismiss>Cancel</paper-button>
+    <paper-button dialog-confirm onclick ="gothrough()">Accept</paper-button>
+  </div>
+</paper-dialog>

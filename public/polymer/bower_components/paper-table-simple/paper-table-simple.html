@@ -48,7 +48,7 @@ Example:
   </style>
 
   <template>
-     <iron-ajax url="{{dataurl}}" on-response="handleresponse" id="ajaxhnd"> </iron-ajax>
+     <iron-ajax url="{{dataurl}}" on-response="handleresponse" id="ajaxhndtbl"> </iron-ajax>
     <div>
       <paper-material elevation="1";> 
        <paper-scroll-header-panel class="flex"> 
@@ -302,7 +302,7 @@ Example:
         },
      handleresponse:function(e)
     {    
-       if(e.detail === this.$.ajaxhnd.lastRequest)
+       if(e.detail === this.$.ajaxhndtbl.lastRequest)
        {
         Polymer.dom(this.root).querySelector('.sp').style.display='none';
        var strings = e.detail.response;
@@ -328,8 +328,8 @@ Example:
    dataurlchanged:function ()
     {
       
-       this.$.ajaxhnd.url=this.dataurl;
-       this.$.ajaxhnd.generateRequest();
+       this.$.ajaxhndtbl.url=this.dataurl;
+       this.$.ajaxhndtbl.generateRequest();
       // Polymer.dom(this.$.ajaxhnd).generateRequest();
    //while(Polymer.dom(this.root).querySelector('iron-ajax').loading===true)
       //console.log(Polymer.dom(this.root).querySelector('iron-ajax').loading);

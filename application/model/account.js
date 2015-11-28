@@ -67,7 +67,7 @@ account.findmaster = function(callback)
 	try{
 		console.log('callfind');
 		
-		this.find({ismaster:'true'},null,true,callback)
+		this.find({ismaster:'true'},{},{},true,callback)
 	}
 	catch(exp)
 	{
@@ -80,7 +80,7 @@ account.findaccount = function(callback)
 	try{
 		console.log('callfind');
 		
-		this.find({ismaster:'false'},null,true,callback)
+		this.find({ismaster:'false'},{},{},true,callback);
 	}
 	catch(exp)
 	{
