@@ -249,14 +249,43 @@ var inventory= new simple.simplecontroler();
   //  console.log(next);
   }
   inventory.updatecart = function()
+  {
+   if(this.req.session.get('login')&& this.req.session.get('group')=='user')
+   {
+     this.updatecartdb();
+   }
+   else
+   {
+     this.updatecartsession();
+   }
+  }
+  
+  inventory.updatecartdb = function()
+  {
+    var cart = [];
+     if(this.req.session.get('login')&& this.req.session.get('group')=='user')
+   {
+     
+      if(this.req.postdata.event == 'A')
+     {
+         var incomingdata = this.req.postdata.cartdata;
+         var mod = this.loadmodel('cart');
+         cart.savecart(incomingdata, function(doc)
+         {
+           inventory.jsonResp(doc);
+         });
+     }
+   }
+    
+  }
+  
+  inventory.updatecartsession = function()
   { 
     
       
     var cart=[];
   
-    if(this.req.session.get('login')&& this.req.session.get('group')=='user')
-   {
-      
+   
      
      if(this.req.postdata.event == 'A')
      {
@@ -295,16 +324,32 @@ var inventory= new simple.simplecontroler();
         inventory.jsonResp({sucess:true, count:length});
        
      }
-   }
+   
   }
+  
   
   inventory.getcartitems = function()
   {
+   if(this.req.session.get('login')&& this.req.session.get('group')=='user')
+   {
+     this.getcartitemsdb();
+   }
+   else
+   {
+     this.getcartitemssession();
+   }
+      
+  }
+  
+  inventory.getcartitemssession = function()
+  {
+    
     var length=0;
     if(this.req.session.get('cart') !== '')  
      {
-      
-      var cart =  JSON.parse(this.req.session.get('cart'))
+     
+      var cart =  JSON.parse(this.req.session.get('cart'));
+     
        for(var item in cart)
        {
         
@@ -317,7 +362,7 @@ var inventory= new simple.simplecontroler();
     
   }
   
-  inventory.findcartitems = function()
+  inventory.findcartitemssession = function()
   {
    
     if(this.req.session.get('login')==='true')
@@ -349,7 +394,7 @@ var inventory= new simple.simplecontroler();
       inventory.jsonResp({});
     } 
   }
-  inventory.showcart = function()
+  inventory.showcartsession = function()
   {
     if(this.req.session.get('login')=== 'true')
 	{

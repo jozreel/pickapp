@@ -1,0 +1,67 @@
+$getviewpart('clientheader');
+<link rel="import" href="/polymer/bower_components/gold-cc-input/gold-cc-input.html">
+<link rel="import" href="/polymer/bower_components/gold-cc-expiration-input/gold-cc-expiration-input.html">
+<link rel="import" href="/polymer/bower_components/gold-cc-cvc-input/gold-cc-cvc-input.html">
+<link rel="import" href="/polymer/bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="/polymer/bower_components/gold-phone-input/gold-phone-input.html">
+<link rel="import" href="/polymer/bower_components/gold-zip-input/gold-zip-input.html">
+<link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/polymer/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/polymer/bower_components/iron-form/iron-form.html">
+ <div class="content fit">
+    
+ <div class="content_client">
+<div class ="ccinfo">
+	<form is="iron-form" method="post" action="/accounts/processteansaction" id="payform">
+	    <paper-input name="firstname" id="firstname" label="firstname" auto-validate required></paper-input>
+		 <paper-input name="lasttname" id="lastname" label="lastname" auto-validate required></paper-input>
+		  <paper-input name="addressln1" id="addressln1" label="street"></paper-input>
+		   <paper-input name="city" id="city" label="city" auto-validate required></paper-input>
+		     <paper-input name="state" id="state" label="state"></paper-input>
+			   <gold-zip-input id="postalcode" label="Mailing zip / postal code" name="postalcode" auto-validate required></gold-zip-input>
+			     <paper-input name="country" id="country" label="country" auto-validate required></paper-input>
+		<gold-cc-input label="Credit Card Number" name="ccnumber" id="cc" auto-validate onblur="checkvalid(event)" required></gold-cc-input>
+		<gold-cc-expiration-input label="Date" id="expdate"  name="expdate" auto-validate required></gold-cc-expiration-input>
+		<gold-cc-cvc-input label="Card Verification Value"  name ="ccv" auto-validate  id="ccv" required></gold-cc-cvc-input>
+		<gold-email-input label="your email address" name="email"  auto-validate required></gold-email-input>
+		<gold-phone-input label="call this"  auto-validate name="tel"  country-code="1" required></gold-phone-input>
+		
+        <paper-button onclick="formsubmit(event)" flat class="greenbutton">submit</paper-button>
+	</form>
+	<div class="ordersumary">
+		<div class="inner">
+		<h2>Your Order</h2>
+		<div id="subtotal"></div>
+		<div id="tax"></div>
+		<div id="shipping"></div>
+		<div id="grandtotal"></div>
+		</div>
+	</div>
+</div>
+ </div>
+ </div>
+</paper-header-panel>
+<script>
+	function checkvalid(event)
+	{
+		var srs = document.getElementById("cc").querySelector('img').src;
+		var ctype = srs.substring(srs.lastIndexOf('/')+1,srs.lastIndexOf('.'));
+		
+		var ele = event.target;
+		ele.cardType = ctype;
+		//console.log(ele);
+		   
+			document.querySelector('#ccv').catdType = ctype;
+			console.log(document.querySelector('#ccv').catdType);
+		
+	}
+	
+	function formsubmit(event)
+	{
+		
+		var json = document.querySelector('#payform').serialize();
+		json.cardtype = document.querySelector('#cc').cardType;
+		console.log(json);
+	}
+	</script>
+$getviewpart('clientfooter');

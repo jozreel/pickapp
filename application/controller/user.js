@@ -83,7 +83,7 @@ var usr= this;
 		  if(iusr.group!==undefined)
 		   usr.req.session.set('group',iusr.group);
 		  if(iusr.group	 === "user")
-		    usr.req.session.set('cart', '[]')
+		    usr.req.session.set('cart', '[]');
 		   usr.req.session.create();
 		  usr.req.redirect.redirect('https://'+usr.req.hostname+':4433/user/add');
 		  

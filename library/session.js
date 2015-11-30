@@ -5,8 +5,13 @@ var session = function(requ, res){
 	this.sessionVars={};
 	this.sessionreqvars={};
 	this.expmins =10;
+	
 	//console.log(this.bla);
 	//this.parseCookies();
+}
+session.prototype.start = function()
+{
+	this.getsessiondata();
 }
 session.prototype.makeCookie = function(cname, cvalue, expmins)
 {
@@ -372,6 +377,7 @@ session.prototype.getsessiondata =function()
 	
 	for(var x in ckArray)
 	{
+		
 		var c = ckArray[x];
 		while(c.charAt(0)==' ') c= c.substring(1);
 		
@@ -379,6 +385,7 @@ session.prototype.getsessiondata =function()
 		if(ns[0] ==='sessionid')
 		{
 		
+		this.isset = true;
 		var sessid = this.decrypt(ns[1])
 		var cfg = require('../config/config');
 		var fs=require('fs');
