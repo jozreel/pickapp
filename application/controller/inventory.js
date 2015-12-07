@@ -262,49 +262,76 @@ var inventory= new simple.simplecontroler();
   
   inventory.updatecartdb = function()
   {
-    var cart = [];
-     if(this.req.session.get('login')&& this.req.session.get('group')=='user')
+    
+    if(this.req.session.get('login')&& this.req.session.get('group')=='user')
    {
-     
-      if(this.req.postdata.event == 'A')
-     {
+       
+         var userid = this.req.session.get('username');
+       
          var incomingdata = this.req.postdata.cartdata;
          var mod = this.loadmodel('cart');
-         cart.savecart(incomingdata, function(doc)
-         {
-           inventory.jsonResp(doc);
-         });
+        
+          mod.findusercart(userid, function(doc)
+          {
+           
+            if(Object.keys(doc).length >0)
+            {
+             
+             mod.updatecart(doc,incomingdata.itemid,function(doc1)
+             {
+               
+               inventory.jsonResp(doc1);
+             });
+             
+            }
+            else
+            {
+             
+              
+               incomingdata.userid = userid;
+               mod.savecart(incomingdata, function(doc)
+                 {
+                     inventory.jsonResp(doc);
+               });
+              
+            }
+            
+        
+            
+          }
+          );
+        
      }
-   }
+   
     
   }
   
   inventory.updatecartsession = function()
-  { 
+  { //fix this
     
       
-    var cart=[];
+    var cart={};
   
    
-     
+      
      if(this.req.postdata.event == 'A')
      {
      
        if(this.req.session.get('cart') !== '')  
           cart = JSON.parse(this.req.session.get('cart'));
-      
+          
        var incomingdata = this.req.postdata.cartdata;
-      
+       
        var count = 1;
-       for(var item in cart)
+       for(var item in cart.items)
        {
-         console.log(item);
-         if(cart[item].itemid === incomingdata.itemid)
+        // console.log(item);
+         if(cart.items[item].itemid === incomingdata.itemid)
          {
           
-          count = parseInt(cart[item].count)+1;
-          cart[item].count=count;
-          console.log(cart);
+          count = parseInt(cart.items[item].count)+1;
+          cart.items[item].count=count;
+          cart.count =parseInt(cart.count)+1;
           break;
          }
         
@@ -312,15 +339,17 @@ var inventory= new simple.simplecontroler();
        if(count === 1)
        {
        incomingdata.count = count;
-       cart.push(incomingdata);
+        
+       cart.items.push(incomingdata);
+       cart.count+=1
+      
        }
       // console.log(cart);
        this.req.session.change("cart", JSON.stringify(cart));
        length = 0;
-       for(var item in cart)
-       {
-         length+= cart[item].count;
-       }
+      
+         length+= cart.count;
+       
         inventory.jsonResp({sucess:true, count:length});
        
      }
@@ -330,9 +359,10 @@ var inventory= new simple.simplecontroler();
   
   inventory.getcartitems = function()
   {
+   
    if(this.req.session.get('login')&& this.req.session.get('group')=='user')
    {
-     this.getcartitemsdb();
+     this.getcartitemsdb(this.req.session.get('username'));
    }
    else
    {
@@ -350,11 +380,7 @@ var inventory= new simple.simplecontroler();
      
       var cart =  JSON.parse(this.req.session.get('cart'));
      
-       for(var item in cart)
-       {
-        
-         length+= cart[item].count;
-       }
+      length = cart.count;
      
      }
      
@@ -362,50 +388,192 @@ var inventory= new simple.simplecontroler();
     
   }
   
-  inventory.findcartitemssession = function()
+  
+  inventory.getcartitemsdb = function(userid)
+  {
+      var mod = this.loadmodel('cart');
+        
+       mod.findusercart(userid, function(doc)
+       {
+         inventory.jsonResp({success:true, count:doc.count});
+       });
+  }
+  
+  inventory.findcartitems = function()
   {
    
-    if(this.req.session.get('login')==='true')
+    var cart;
+    var inv = this;
+    if(this.req.session.get('login') === 'true')
     {
-     
-    var cart = JSON.parse(this.req.session.get('cart'));
-    
-    var arr=[];
-    var mod = this.loadmodel('inventory');
-    for(var it in cart)
-    {
-     
-      var objid = mod.createObjectId(cart[it].itemid);
-	    arr[it] = objid;
-    }
-      console.log('lplp');
-    
-    mod.find({'_id': {$in:arr}},{name:true, desc:true, image:true,price:true},{sort:'name'},true,function(doc)
-    {var decd = mod.decodeallValues(doc);
-      
-      mod.convertImagesToBase64(decd);
-      
-      inventory.jsonResp(decd);
-    });
+      var mod = this.loadmodel('cart');
+      mod.findusercart(this.req.session.get('username'),function(doc)
+      {
+       
+        
+        
+        inv.findcartitemssession(doc);
+      }
+      );
     }
     else
     {
-      
-      inventory.jsonResp({});
-    } 
+     cart = JSON.parse(this.req.session.get('cart'));
+      this.findcartitemssession(cart);
+    }
   }
-  inventory.showcartsession = function()
+  
+  inventory.findcartitemssession = function(cart)
   {
-    if(this.req.session.get('login')=== 'true')
-	{
-		
-		this.viewholder.user = this.req.session.get('username');
-		this.viewholder.useraction='<a class="plainlink" href ="/user/logout">Logout</a>';
-	}
-	else{this.viewholder.user="Guest"
-	this.viewholder.useraction='<a class="plainlink" href ="/user/login">Login</a>';
-	}
+   
+   
+   /* var arr=[];
+    var mod = this.loadmodel('inventory');
+    for(var it in cart.items)
+    {
+     
+      var objid = mod.createObjectId(cart.items[it].itemid);
+     console.log(objid);
+	    arr[it] = objid;
+    }
+     
+    
+    mod.find({'_id': {$in:arr}},{name:true, desc:true, image:true,price:true},{sort:'name'},true,function(doc)
+    {var decd = mod.decodeallValues(doc);
+     
+      mod.convertImagesToBase64(decd);
+    // decd.count = 
+      for(var it in decd)
+      {
+        decd[it].count = inventory.addcartdata(cart,decd[it]._id);
+      }
+      inventory.jsonResp(decd);
+    });*/
+    
+    
+    
+    
+    
+    
+    
+    var itemid;
+   
+    var docs =[];
+   
+    var dc;
+    var arr=[];
+    var mod = this.loadmodel('inventory');
+    for(var it in cart.items)
+    {
+     
+      var objid = mod.createObjectId(cart.items[it].itemid);
+     
+	    arr[it] = objid;
+    }
+   var stop = 1;
+  var curr = 0;
+  var total = 0.00;
+   var async = require('async');
+  
+   async.whilst(
+      function () { return curr < stop;},
+     function(callback)
+     {
+      mod.find({'_id': {$in:arr}},{name:true, desc:true, image:true,price:true},{sort:'name'},false,function(doc,count)
+      {
+       
+       if(stop === 0)
+          stop=count;
+      curr ++;
+      if(doc._id !== undefined) 
+      {
+       itemid = doc._id.toString();
+      
+     
+       for(var it in cart.items)
+       {
+      
+         if(cart.items[it].itemid === itemid)
+         {
+           
+             doc.count = cart.items[it].count;
+             
+             break;
+
+             
+         }
+         
+       }
+      }
+       if(doc.uprice !== '')
+       {
+        
+        total = total + (parseFloat(doc.uprice) * doc.count);
+        //console.log(count);
+         
+       }
+     //  var d = JSON.stringify(doc);
+       
+       docs.push(doc);
+       
+       
+       
+       if(curr === count)
+       {
+         
+         callback(null, total);
+       }
+     
+    }); 
+   
+     
+     },
+   
+   function(err, tot)
+     {
+       if(err)
+        console.log(err);
+     
+      var obj = {}; 
+       var decd = mod.decodeallValues(docs);
+       mod.convertImagesToBase64(decd);
+      
+       obj.total = total.toFixed(2);
+       obj.items = JSON.stringify(decd);
+    //// decd.count = 
+      // console.log(JSON.parse(obj));
+     
+      inventory.jsonResp(obj);
+     }
+   );  
+
+    
+   
+  }
+  inventory.showcart = function()
+  {
+   var common = require('./common');
+	
+	  common.getheaderdetails(this);
+  
     this.loadview('cart');
   }
+  inventory.addcartdata = function(cart,item)
+  {
+     for(var it in cart.items)
+       {
+      
+         if(cart.items[it].itemid === item.toString())
+         {
+           
+            return cart.items[it].count;
+           
+            break;
+         }
+       }
+       return 0;
+       
+  }
+ 
 	module.exports = inventory;
 	

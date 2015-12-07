@@ -626,7 +626,7 @@ mongodriver.prototype.traverseCursor =function(cursor,db, callback,count,coll)
  {
 	 var obj=this;
    var itter = 0;
-  var tmparr =[];
+  var tmparr = new Array();
   if(count===0)
   {
     callback({error:true,message:"empty"});
@@ -640,9 +640,10 @@ mongodriver.prototype.traverseCursor =function(cursor,db, callback,count,coll)
        itter++;
        if(coll === true)
        {
-         //console.log(doc);
+        
          
-         tmparr.push(doc);
+         tmparr.push(doc); 
+         //console.log(tmparr);
          if(itter == count)
          {
             db.close();  
@@ -654,7 +655,8 @@ mongodriver.prototype.traverseCursor =function(cursor,db, callback,count,coll)
        }
        else
        {
-        callback(doc,count,itter);
+       
+        callback(doc,count);
        }
     // 
 		 

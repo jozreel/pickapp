@@ -77,7 +77,7 @@ var usr= this;
 	
 	 if(iusr !== undefined && iusr.userid !== undefined)
 	 {
-		  usr.req.session.expmins = 5;
+		  usr.req.session.expmins = 20;
 		  usr.req.session.set('login', 'true');
 		  usr.req.session.set('username', iusr.username);
 		  if(iusr.group!==undefined)
@@ -101,6 +101,19 @@ var usr= this;
 user.landingpage = function()
 {
 	
+}
+user.userdetails = function()
+{
+	if(this.req.session.get('login') ==='true')
+	{
+		console.log('req');
+		user.jsonResp({user:this.req.session.get('username'), action:'<a class="plainlink" href ="/user/logout">Logout</a>'});
+	}
+	else
+	{
+		console.log('guest');
+	   user.jsonResp({user:'Guest', action:'<a class="plainlink" href ="/user/login">Login</a>'});
+	}
 }
 
 module.exports = user;

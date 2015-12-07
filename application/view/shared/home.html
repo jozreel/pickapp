@@ -2,6 +2,7 @@
  $getviewpart('clientheader')
   <link rel="import" href="/polymer/bower_components/paper-toolbar/paper-toolbar.html">
       <link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+        <link rel="import" href="/polymer/bower_components/paper-material/paper-material.html">
       <link rel="import" href="/polymer/bower_components/paper-tooltip/paper-tooltip.html">
     <link rel="import" href="/polymer/bower_components/neon-animation/neon-animations.html">
    
@@ -35,7 +36,7 @@
   </div>
  
     <ajax-parser id="updatecart"></ajax-parser>
-     <ajax-req id="getcart"></ajax-req>
+     
  </paper-header-panel>
   <div class="scrollanimation">
  </div>
@@ -109,7 +110,7 @@
                 '<input type="hidden" name="_id" class="_id" value="'+doc[docitem]._id+'" />'+
           '</paper-card>';
           */
-         ele.innerHTML ='<div class="itemcard">'+
+         ele.innerHTML ='<paper-material class="paper"><div class="itemcard">'+
              '<div><img class="hand itemimage" src="'+image+'" onclick="dialogpop(event)" /></div>'+
              '<div>'+
              '<div class="itemtitle hand itemname" onclick="dialogpop(event)">'+doc[docitem].name+'</div>'+
@@ -124,7 +125,7 @@
                 '</div>'+
                 '<input type="hidden" name="itemlongdesc" class="itemlongdesc" value="'+doc[docitem].longdesc+'" />'+
                 '<input type="hidden" name="_id" class="_id" value="'+doc[docitem]._id+'" />'+
-          '</div>';
+          '</div> </paper-material>';
        // if(i === 1)
         //   document.getElementById('first').appendChild(ele);
         // else if(i=== 2)
@@ -163,21 +164,7 @@
    
   }
   
-  function updatecart(event)
-  {
-     document.querySelector('#updatecart').submit=false;
-    document.querySelector('#updatecart').respfunc = updatebadge;
-    document.querySelector('#updatecart').jsonstring = '{"event":"A", "cartdata":{"itemid":"'+ document.querySelector('#_id').value+'"}}';
-    document.querySelector('#updatecart').jsonurl="/inventory/updatecart/";
-    document.querySelector('#updatecart').submit=true;
-    
-  }
-  
-  function updatebadge(doc)
-  {
-    console.log(doc);
-    document.querySelector('#badge').label= doc.count;
-  }
+
  
    </script>
   

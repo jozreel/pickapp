@@ -35,7 +35,7 @@ function resp(str,elem)
      else
        elem.innerHTML =str.error;
    elem.show();
-   sajax('#form').clearForm();
+   sajax('form').clearForm();
 }
 
 function setEvent(ev)
@@ -130,7 +130,87 @@ function deleteobj(apaser)
  
  
  
+ //// shopping cart functions
  
+ 
+   function updatecart(event)
+  {
+     document.querySelector('#updatecart').submit=false;
+    document.querySelector('#updatecart').respfunc = updatebadge;
+    document.querySelector('#updatecart').jsonstring = '{"event":"A", "cartdata":{"itemid":"'+ document.querySelector('#_id').value+'"}}';
+    document.querySelector('#updatecart').jsonurl="/inventory/updatecart/";
+    document.querySelector('#updatecart').submit=true;
+    
+  }
+  
+  function updatebadge(doc)
+  {
+    console.log(doc);
+    document.querySelector('#badge').label= doc.count;
+  }
+  
+  
+  function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+  
+  
+  function checkCookie() {
+    var session = getCookie("sessionid");
+    if (session == "" && (document.querySelector('#logonindicator').value !== 'Guest' && document.querySelector('#logonindicator').value !== '')) {
+       window.location.href = '/user/login';
+       console.log(document.querySelector('#logonindicator').value);
+       alert('expired');
+    } 
+    else
+    {
+     console.log(document.querySelector('#logonindicator').value);
+    }
+    
+}
+
+function updateuserinfo()
+{
+  console.log('koko');
+   document.getElementById('dheader').dataurl="";
+  document.getElementById('dheader').dataurl = '/user/userdetails'
+  document.getElementById('dheader').respfunc=function(doc)
+  {
+    console.log(doc);
+    document.getElementById('userlink').innerHTML = doc.user;
+     document.getElementById('useraction').innerHTML = doc.action;
+     document.getElementById('logonindicator').innerHTML = doc.user;
+  }
+}
+
+function updateFormValues(form, model)
+{
+  for(var item in model)
+  {
+    var elename = form.querySelector('#'+item);
+    if(elename !== undefined && elename !==null)
+    {
+      
+      switch(elename.tagName)
+      {
+         case 'drop-down':
+          elename.selectedvalue = model[item];
+         default:
+          elename.value = model[item];
+         
+      }
+    } 
+  }
+}
+
+setInterval(function(){checkCookie()},20000);
  
  
  

@@ -71,6 +71,8 @@ accounts.index = function()
 
 accounts.checkout = function()
 {
+    var common = require('./common');
+    common.getheaderdetails(this);
 	this.loadview('checkout');
 }
 
@@ -101,8 +103,9 @@ accounts.paypalcreatecard = function()
 
 }
 
-accounts.paypalcardpayment = function()
+accounts.paypalcardpayment = function(obj)
 {
+    var cartinfo = this.getcartinfo(true);
 	var reqobj = this.req.postdata;
 	var create_payment_json = {
     "intent": "sale",
@@ -112,29 +115,29 @@ accounts.paypalcardpayment = function()
             "credit_card": {
                 "type": reqobj.cardtype,
                 "number": reqobj.ccnumber,
-                "expire_month": reqobj.expmonth,
-                "expire_year": reqobj.expyear,
+                "expire_month": reqobj.expdate.split('/')[0],
+                "expire_year": reqobj.expdate.split('/')[1],
                 "cvv2": reqobj.ccv,
                 "first_name": reqobj.firstname,
                 "last_name": reqobj.lastname,
                 "billing_address": {
-                    "line1": reqobj.addrline1,
-                    "city": reqobj.city,
-                    "state": reqobj.state,
-                    "postal_code": reqobj.postal,
-                    "country_code": reqobj.country
+                    "line1": reqobj.billingaddressline1,
+                    "city": reqobj.billingcity,
+                    "state": reqobj.billingstate,
+                    "postal_code": reqobj.billingpostalcode,
+                    "country_code": reqobj.billingcountry
                 }
             }
         }]
     },
     "transactions": [{
         "amount": {
-            "total": reqobj.transaction.total,
+            "total": cartinfo.total,
             "currency": "USD",
             "details": {
-                "subtotal": reqobj.subtotal,
-                "tax": reqobj.tax,
-                "shipping": reqobj.shipping,
+                "subtotal": cartinfo.subtotal,
+                "tax": cartinfo.tax,
+                "shipping": cartinfo.shipping,
             }
         },
         "description": reqobj.transactiondesc
@@ -149,6 +152,126 @@ paypal.payment.create(create_payment_json, function (error, payment) {
         console.log(payment);
     }
 });
+}
+
+accounts.getcartinfo = function(ret)
+{ 
+    if(this.req.session.get('login') =='true')
+    {
+        var mod = this.loadmodel('cart');
+        mod.findusercart(this.req.session.get('username'),function(doc)
+      {
+       
+            accounts.orderinfo(doc,ret);
+      }
+      );
+    }
+    else
+    {
+        
+       var cart = JSON.parse(this.req.session.get('cart'));
+      
+      this.orderinfo(cart,ret);
+    }
+    
+}
+ accounts.orderinfo = function(cart,ret)
+ {   console.log(ret);
+     if(ret === undefined)
+        ret = false;
+     if(cart.count !== 0)
+     {
+     var curr=0;
+     var stop = 1;
+     var async = require('async');
+     var itemid;
+     var arr=[];
+     var total =0.00;
+     var docs=[];
+     var mod = this.loadmodel('inventory');
+     for(var item in cart.items)
+     {
+         arr[item] = mod.createObjectId(cart.items[item].itemid);
+     }
+    
+     async.whilst(
+     function () { return curr < stop;},
+     function(callback)
+     {
+      mod.find({'_id': {$in:arr}},{name:true, desc:true, image:true,price:true},{sort:'name'},false,function(doc,count)
+      {
+       
+       if(stop === 0)
+          stop=count;
+      curr ++; 
+      if(doc._id !==undefined)
+        itemid = doc._id.toString();
+      
+      for(var it in cart.items)
+       {
+      
+         if(cart.items[it].itemid === itemid)
+         {
+           
+             doc.count = cart.items[it].count;
+             
+             break;
+
+             
+         }
+         
+       }
+    
+      
+       if(doc.uprice !== '')
+       {
+        
+        total = total + (parseFloat(doc.uprice) * doc.count);
+        
+         
+       }
+     //  var d = JSON.stringify(doc);
+       
+     //  docs.push(doc);
+       
+       
+       
+       if(curr === count)
+       {
+         
+         callback(null, total);
+       }
+     
+    }); 
+        
+ },
+   
+   function(err, tot)
+     {
+       if(err)
+        console.log(err);
+    
+      var obj = {}; 
+       //var decd = mod.decodeallValues(docs);
+       //mod.convertImagesToBase64(decd);
+      
+       obj.total = total.toFixed(2);
+       //obj.items = JSON.stringify(decd);
+    //// decd.count = 
+      // console.log(JSON.parse(obj));
+     if(ret!==true)
+      accounts.jsonResp(obj);
+     else
+      return obj;
+     }
+   );  
+     }
+     else{
+         if(ret !==true)
+         accounts.jsonResp({total:0.00});
+         else
+           return {total:0.00};
+     }
 }
 
 module.exports = accounts;

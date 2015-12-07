@@ -6,42 +6,73 @@ $getviewpart('clientheader');
 <link rel="import" href="/polymer/bower_components/gold-phone-input/gold-phone-input.html">
 <link rel="import" href="/polymer/bower_components/gold-zip-input/gold-zip-input.html">
 <link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/polymer/bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="/polymer/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/polymer/bower_components/iron-form/iron-form.html">
- <div class="content fit">
-    
- <div class="content_client">
-<div class ="ccinfo">
-	<form is="iron-form" method="post" action="/accounts/processteansaction" id="payform">
-	    <paper-input name="firstname" id="firstname" label="firstname" auto-validate required></paper-input>
-		 <paper-input name="lasttname" id="lastname" label="lastname" auto-validate required></paper-input>
-		  <paper-input name="addressln1" id="addressln1" label="street"></paper-input>
-		   <paper-input name="city" id="city" label="city" auto-validate required></paper-input>
-		     <paper-input name="state" id="state" label="state"></paper-input>
-			   <gold-zip-input id="postalcode" label="Mailing zip / postal code" name="postalcode" auto-validate required></gold-zip-input>
-			     <paper-input name="country" id="country" label="country" auto-validate required></paper-input>
-		<gold-cc-input label="Credit Card Number" name="ccnumber" id="cc" auto-validate onblur="checkvalid(event)" required></gold-cc-input>
-		<gold-cc-expiration-input label="Date" id="expdate"  name="expdate" auto-validate required></gold-cc-expiration-input>
-		<gold-cc-cvc-input label="Card Verification Value"  name ="ccv" auto-validate  id="ccv" required></gold-cc-cvc-input>
-		<gold-email-input label="your email address" name="email"  auto-validate required></gold-email-input>
-		<gold-phone-input label="call this"  auto-validate name="tel"  country-code="1" required></gold-phone-input>
-		
-        <paper-button onclick="formsubmit(event)" flat class="greenbutton">submit</paper-button>
-	</form>
-	<div class="ordersumary">
-		<div class="inner">
-		<h2>Your Order</h2>
-		<div id="subtotal"></div>
-		<div id="tax"></div>
-		<div id="shipping"></div>
-		<div id="grandtotal"></div>
+<link rel="import" href="/polymer/bower_components/ajax-parser/ajax-req.html">
+<div class="content fit">
+
+	<div class="content_client">
+		<div class="ccinfo">
+			<form is="iron-form" method="post" action="/accounts/processteansaction" id="payform">
+			    <fieldset>
+					<legend>Billing information</legend>
+				<paper-input name="firstname" id="firstname" label="firstname" auto-validate required></paper-input>
+				<paper-input name="lasttname" id="lastname" label="lastname" auto-validate required></paper-input>
+				<paper-input name="billingaddressln1" id="addressln1" label="street"></paper-input>
+				<paper-input name="billingcity" id="city" label="city" auto-validate required></paper-input>
+				<paper-input name="billingstate" id="state" label="state"></paper-input>
+				<gold-zip-input id="billingpostalcode" label="Mailing zip / postal code" name="billingpostalcode" auto-validate required></gold-zip-input>
+				<paper-input name="billingcountry" id="country" label="country" auto-validate required></paper-input>
+				<gold-cc-input label="Credit Card Number" name="ccnumber" id="cc" auto-validate onblur="checkvalid(event)" required></gold-cc-input>
+				<gold-cc-expiration-input label="Date" id="expdate" name="expdate" auto-validate required></gold-cc-expiration-input>
+				<gold-cc-cvc-input label="Card Verification Value" name="ccv" auto-validate id="ccv" required></gold-cc-cvc-input>
+				<gold-email-input label="your email address" name="email" auto-validate required></gold-email-input>
+				<gold-phone-input label="call this" auto-validate name="tel" country-code="1" required></gold-phone-input>
+			    </fieldset>
+				<p><paper-checkbox id="ship" onchange="checkshipping()">Shipping address same as billing</paper-checkbox></p>
+                <fieldset id="shipping">
+					<legend>Shipping information</legend>
+					<paper-input name="shippingaddressln1" id="shippingaddressln1" label="street"></paper-input>
+				<paper-input name="shippingcity" id="shippingcity" label="shipingcity" auto-validate required></paper-input>
+				<paper-input name="shippingstate" id="shippingstate" label="state"></paper-input>
+				<gold-zip-input id="shippingpostalcode" label="Mailing zip / postal code" name="shippingpostalcode" auto-validate required></gold-zip-input>
+				<paper-input name="shippingcountry" id="shippingcountry" label="country" auto-validate required></paper-input>
+					
+				</fieldset>
+				<paper-button onclick="formsubmit(event)" flat class="greenbutton">submit</paper-button>
+			</form>
+			<ajax-req id="ordertotals" dataurl="/accounts/getcartinfo"></ajax-req>
+
+			<div class="ordersumary">
+				<div class="inner">
+					<h2>Your Order</h2>
+					<div class="subtotal"><div class="tots">Sub Total: </div><span id="subtotal"></span></div>
+					<div class="tax"><div class="tots">Tax: </div><span id="tax"></span></div>
+					<div class="shipping"><div class="tots">Shipping: </div><span id="shipping"></span></div>
+					<div class="grandtotal"><div class="tots">Total: </div><span id="total"></span></div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
- </div>
- </div>
 </paper-header-panel>
 <script>
+	
+	document.querySelector('#ordertotals').respfunc=function(doc)
+	{
+		console.log(doc);
+	
+	  	document.querySelector('#subtotal').innerHTML = doc.total;
+	    document.getElementById('getcart').respfunc= function(doc){
+		
+         updatebadge(doc);
+		 updateuserinfo();
+	 }
+	 document.getElementById('getcart').dataurl="";
+	  document.getElementById('getcart').dataurl = '/inventory/getcartitems/';
+	}
+	//document.querySelector('#ordertotals').dataurl="/accounts/getcartinfo"
 	function checkvalid(event)
 	{
 		var srs = document.getElementById("cc").querySelector('img').src;
@@ -58,10 +89,30 @@ $getviewpart('clientheader');
 	
 	function formsubmit(event)
 	{
-		
+		if(document.getElementById('payform').validate())
+		{
 		var json = document.querySelector('#payform').serialize();
 		json.cardtype = document.querySelector('#cc').cardType;
 		console.log(json);
+		}
 	}
+	
+	function checkshipping()
+	{ 
+		
+	    document.getElementById('shipping').disabled=true;
+		
+		var chkbox = document.getElementById('ship');
+		
+		if(chkbox.checked)
+		{
+			document.getElementById('shippingaddressln1').value = document.querySelector('input[name="billingaddressln1"]').value;
+			document.getElementById('shippingcity').value = document.querySelector('input[name="billingcity"]').value;
+			document.getElementById('shippingstate').value = document.querySelector('input[name="billingstate"]').value;
+			document.getElementById('shippingpostalcode').value = document.querySelector('input[name="billingpostalcode"]').value;
+			document.getElementById('shippingcountry').value = document.querySelector('input[name="billingcountry"]').value;
+		}
+	}
+	
 	</script>
 $getviewpart('clientfooter');

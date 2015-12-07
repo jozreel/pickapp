@@ -38,14 +38,18 @@
         
         
       }
-      .item img{display: inline-block; position: relative; width: 100%; }
+      .helper{vertical-align: middle; height: 100%; display: inline-block !important;}
+      .avatar img{display: inline-block !important; vertical-align: middle; width: 42px;}
       
       .avatar {
-      height: 40px;
-      width: 40px;
-      border-radius: 20px;
+      height: 50px;
+      width: 50px;
+      border-radius: 25px;
       box-sizing: border-box;
+      z-index: 1000;
+      overflow: hidden;
       background-color: #DDD;
+      position: relative; 
     }
       .item:focus,
       .item.selected:focus {
@@ -70,7 +74,8 @@
                <input name="_id" value="[[item._id]]" type="hidden" />
               <div class$="[[_computedClass(selected)]]">
                 <div class="avatar">
-               <img src$="[[_getImage(listdata.image)]]">
+                 <div class="helper"></div>
+               <img src$="[[_getImage(listdata.image)]]" />
               </div>
               <div style="display:block; position:relative;">
                <template is="dom-repeat" items="[[headers]]">

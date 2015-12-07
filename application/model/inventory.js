@@ -14,7 +14,10 @@ inventory.add = function(obj,callback)
   inventory.uprice=obj.uprice;
   inventory.serial=obj.serial;
   inventory.instore= obj.instore
-  
+  if(obj.taxdef !== undefined)
+  {
+    inventory.taxdef = obj.taxdef;
+  }
   if(obj.image !== undefined && this.checksendtogrid(obj.image.size))
   {
    
@@ -61,6 +64,10 @@ inventory.modify = function(obj,callback)
   inventory.uprice=obj.uprice;
   inventory.serial=obj.serial;
   inventory.instore= obj.instore
+  if(obj.taxdef !== undefined)
+  {
+    inventory.taxdef = obj.taxdef;
+  }
   if(obj.image !== undefined && this.checksendtogrid(obj.image.size))
   {
      inventory.image = {};
