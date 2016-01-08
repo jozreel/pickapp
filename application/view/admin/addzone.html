@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <meta charset="UTF-8">
+	<link rel="import" href="/polymer/bower_components/paper-input/paper-input.html">
+	<link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+	  <link rel="import" href="/style/element-styles.html">
+	   <link rel="import" href="/polymer/bower_components/dynamic-dropdown/dynamic-dropdown.html">
+		 <link rel="stylesheet" href="/style/styles.css">
+		 <title>{{title}}</title>
+	</head>
+	<body>
+		<div class="header"></div>
+		<div class="content">
+			 <form is="iron-form" id ="zoneform" method="post"  class="singleformpage">
+	  <fieldset>
+		   <paper-input label="Zone Name" required auto-validate name="zname"></paper-input>
+		    <paper-input label="Zone Address" required auto-validate name="zaddress"></paper-input>
+			 <dynamic-dropdown label="Zone Bus Stop" required auto-validate 	name="zonebstop"></dynamic-dropdown>
+			 <div class ="registerbutton"><paper-button class="green500">Submit and Register</paper-button></div>
+	  </fieldset>
+     </form>
+      
+		</div>
+	</body>
+</html>

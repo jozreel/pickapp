@@ -1,0 +1,102 @@
+
+
+
+2015-12-11T17:16:20.293Z
+Cannot find module '../application/controller/lp'
+
+2015-12-11T17:16:20.293Z
+Error: Cannot find module '../application/controller/lp'
+    at Function.Module._resolveFilename (module.js:338:15)
+    at Function.require.resolve (module.js:384:19)
+    at Server.app (/home/jozreel/Development/www/proj/node_modules/simplejs.js:158:22)
+    at Server.EventEmitter.emit (events.js:98:17)
+    at HTTPParser.parser.onIncoming (http.js:2108:12)
+    at HTTPParser.parserOnHeadersComplete [as onHeadersComplete] (http.js:121:23)
+    at Socket.socket.ondata (http.js:1966:22)
+    at TCP.onread (net.js:525:27)
+
+2015-12-11T17:16:20.323Z
+Cannot find module '../application/controller/favicon.ico'
+
+2015-12-11T17:16:20.323Z
+Error: Cannot find module '../application/controller/favicon.ico'
+    at Function.Module._resolveFilename (module.js:338:15)
+    at Function.require.resolve (module.js:384:19)
+    at Server.app (/home/jozreel/Development/www/proj/node_modules/simplejs.js:158:22)
+    at Server.EventEmitter.emit (events.js:98:17)
+    at HTTPParser.parser.onIncoming (http.js:2108:12)
+    at HTTPParser.parserOnHeadersComplete [as onHeadersComplete] (http.js:121:23)
+    at Socket.socket.ondata (http.js:1966:22)
+    at TCP.onread (net.js:525:27)
+
+2015-12-11T19:59:40.799Z
+Cannot find module '../application/controller/favicon.ico'
+
+2015-12-11T19:59:40.799Z
+Error: Cannot find module '../application/controller/favicon.ico'
+    at Function.Module._resolveFilename (module.js:338:15)
+    at Function.require.resolve (module.js:384:19)
+    at Server.app (/home/jozreel/Development/www/pickapp/node_modules/simplejs.js:158:22)
+    at Server.EventEmitter.emit (events.js:98:17)
+    at HTTPParser.parser.onIncoming (http.js:2108:12)
+    at HTTPParser.parserOnHeadersComplete [as onHeadersComplete] (http.js:121:23)
+    at Socket.socket.ondata (http.js:1966:22)
+    at TCP.onread (net.js:525:27)
+
+2015-12-11T19:59:49.686Z
+simple is not defined
+
+2015-12-11T19:59:49.686Z
+ReferenceError: simple is not defined
+    at Object.<anonymous> (/home/jozreel/Development/www/pickapp/application/controller/subscribe.js:2:21)
+    at Module._compile (module.js:456:26)
+    at Object.Module._extensions..js (module.js:474:10)
+    at Module.load (module.js:356:32)
+    at Function.Module._load (module.js:312:12)
+    at Module.require (module.js:364:17)
+    at require (module.js:380:17)
+    at Server.app (/home/jozreel/Development/www/pickapp/node_modules/simplejs.js:164:13)
+    at Server.EventEmitter.emit (events.js:98:17)
+    at HTTPParser.parser.onIncoming (http.js:2108:12)
+
+2015-12-11T19:59:49.720Z
+Cannot find module '../application/controller/favicon.ico'
+
+2015-12-11T19:59:49.720Z
+Error: Cannot find module '../application/controller/favicon.ico'
+    at Function.Module._resolveFilename (module.js:338:15)
+    at Function.require.resolve (module.js:384:19)
+    at Server.app (/home/jozreel/Development/www/pickapp/node_modules/simplejs.js:158:22)
+    at Server.EventEmitter.emit (events.js:98:17)
+    at HTTPParser.parser.onIncoming (http.js:2108:12)
+    at HTTPParser.parserOnHeadersComplete [as onHeadersComplete] (http.js:121:23)
+    at Socket.socket.ondata (http.js:1966:22)
+    at TCP.onread (net.js:525:27)
+
+2015-12-11T20:00:37.998Z
+Cannot find module '../application/controller/favicon.ico'
+
+2015-12-11T20:00:37.998Z
+Error: Cannot find module '../application/controller/favicon.ico'
+    at Function.Module._resolveFilename (module.js:338:15)
+    at Function.require.resolve (module.js:384:19)
+    at Server.app (/home/jozreel/Development/www/pickapp/node_modules/simplejs.js:158:22)
+    at Server.EventEmitter.emit (events.js:98:17)
+    at HTTPParser.parser.onIncoming (http.js:2108:12)
+    at HTTPParser.parserOnHeadersComplete [as onHeadersComplete] (http.js:121:23)
+    at Socket.socket.ondata (http.js:1966:22)
+    at TCP.onread (net.js:525:27)
+
+2015-12-11T20:00:58.023Z
+Cannot find module '../application/controller/favicon.ico'
+
+2015-12-11T20:00:58.023Z
+Error: Cannot find module '../application/controller/favicon.ico'
+    at Function.Module._resolveFilename (module.js:338:15)
+    at Function.require.resolve (module.js:384:19)
+    at Server.app (/home/jozreel/Development/www/pickapp/node_modules/simplejs.js:158:22)
+    at Server.EventEmitter.emit (events.js:98:17)
+    at HTTPParser.parser.onIncoming (http.js:2108:12)
+    at HTTPParser.parserOnHeadersComplete [as onHeadersComplete] (http.js:121:23)
+    at Socket.socket.ondata (http.js:1966:22)
+    at TCP.onread (net.js:525:27)

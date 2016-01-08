@@ -21,7 +21,8 @@
     "paper-elements": "PolymerElements/paper-elements#~1.0.5",
     "iron-elements": "PolymerElements/iron-elements#~1.0.4",
     "gold-elements": "PolymerElements/gold-elements#~1.0.1",
-    "paper-listbox": "polymerelements/paper-listbox#^1.0.0"
+    "paper-listbox": "polymerelements/paper-listbox#^1.0.0",
+    "google-map": "GoogleWebComponents/google-map#^1.0.0"
   },
   "resolutions": {
     "polymer": "~1.2.1",

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <meta charset="UTF-8">
+	<link rel="import" href="/polymer/bower_components/google-map/google-map.html">
+  <link rel="import" href="/polymer/bower_components/google-map/google-map-marker.html">
+	<link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+  <link rel="import" href="/polymer/bower_components/paper-material/paper-material.html">
+	  <link rel="import" href="/style/element-styles.html">
+	   <link rel="import" href="/polymer/bower_components/dynamic-dropdown/dynamic-dropdown.html">
+     <link rel="import" href="/polymer/bower_components/ajax-parser/ajax-req.html">
+     <link rel="import" href="/polymer/bower_components/ajax-parser/ajax-parser.html">
+ 
+		 <link rel="stylesheet" href="/style/styles.css">
+		 <title>{{title}}</title>
+	</head>
+	<body>
+      <ajax-req id="gcode"  ></ajax-req>
+      <ajax-parser  id="saj" method="POST" ></ajax-parser>
+		<div class="header"></div>
+		<div class="content-full">
+  <paper-material class="map-paper">
+<google-map api-key ='AIzaSyBZtJsv251EP3rTYIJszSdUASB0RyKAh5c' map-type="roadmap" class="map" click-events latitude="15.3014" longitude="-61.3883"  zoom="17" fit-to-markers>
+  <google-map-marker id="gmarker" latitude="15.3014" longitude="-61.3883"
+      draggable="true" title="Bus Stop" icon="/image/pulser.gif"> 
+      
+      </google-map-marker>
+ 
+</google-map>
+  </paper-material>
+<paper-button  id="stops">Update Terminal Data</paper-button>
+		</div>
+		
+		<script>
+   var markerObj = {};
+   
+   var stops= new Array();
+  var gmap = document.querySelector('google-map');
+   
+  gmap.addEventListener('api-load', function(e) {
+	 var city = "";
+   var country="";
+   var map  = this.map;
+   var state = "";
+   service = new google.maps.places.PlacesService(map);
+   var loc = map.center;
+ 
+   var gcstr =  'https://maps.googleapis.com/maps/api/geocode/json?latlng='+loc.lat()+','+loc.lng()+'&key=AIzaSyCfysUfaRcTJQHGlk-lnackuiNe9AveGks';
+   console.log(gcstr);
+   var request = {
+    location:loc,
+    radius: '500',
+    types: ['bus_station']
+  };
+  
+   service = new google.maps.places.PlacesService(map);
+  service.nearbySearch(request, callback);
+  
+  function callback(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+	  var stops= new Array();
+    for (var i = 0; i < results.length; i++) {
+		  
+      var place = results[i];
+    
+      var obj ={};
+      obj._id = results[i].id;
+      obj.place_id = results[i].place_id;
+      obj.name = results[i].name;
+      obj.reference = results[i].reference;
+      obj.vicinity = results[i].vicinity;
+      obj.lng =results[i].geometry.location.lng()
+      obj.lat = results[i].geometry.location.lat()
+      stops.push(obj);
+      
+    //  createMarker(results[i]);
+    }
+    document.getElementById('stops').onclick = function()
+    {
+      document.querySelector('#saj').respfunc=function(doc)
+      {
+       document.querySelector('#saj').submit=false;
+        document.querySelector('#saj').jsonurl = "/admin/addworkarea";
+        document.querySelector('#saj').jsonstring = JSON.stringify({city:city,country:country, state:state});
+       document.querySelector('#saj').respfunc=function(doc)
+       {
+         alert('kokok');
+       }
+     
+       document.querySelector('#saj').submit=true;
+       
+        
+      }
+       document.querySelector('#saj').jsonurl = "/admin/bulkupdatebusstop";
+        document.querySelector('#saj').jsonstring = JSON.stringify({city:city,country:country, stops:stops});
+       
+       document.querySelector('#saj').submit=true;
+      
+     
+    }
+  }
+  
+  document.getElementById('gcode').dataurl = gcstr;
+  document.getElementById('gcode').respfunc=function(doc)
+  {
+    var aloc = doc.results[0].address_components;
+   
+    for(items in aloc)
+    {
+      
+      if(aloc[items].types.indexOf('locality') !== -1)
+      {
+        
+        city = aloc[items].long_name;
+       continue;
+      }
+       if(aloc[items].types.indexOf('country') !== -1)
+      {
+        country = aloc[items].long_name;
+        continue;
+      }
+      if(aloc[items].types.indexOf('administrative_area_level_1') !== -1)
+      {
+        state= aloc[items].long_name;
+        continue;
+      }
+      if(city !== ''&& country !== '')
+      {
+        break;
+      }
+    }
+  }
+  
+  }
+  
+  
+  google.maps.event.addListener(map, 'dblclick', function(e) {
+     map.setZoom(15);
+    placeMarker(e.latLng, map);
+    
+  });
+
+  function placeMarker(position, map) {
+    var infowindow = new google.maps.InfoWindow();
+    var iconBase = 'image/gp.gif';
+    var marker = new google.maps.Marker({
+      position: position,
+      map: map,
+      icon: iconBase,
+      title:"Pros",
+      optimized:false
+     
+    }); 
+    
+    marker.addListener('click', function() {
+    infowindow.setContent('Pros taxi service');
+    infowindow.open(map, marker);
+  }); 
+    map.panTo(position);
+  }
+
+  
+  });
+  function toggleControls() {
+    gmap.disableDefaultUi = !gmap.disableDefaultUi;
+  }
+  
+ 
+</script>
+	</body>
+</html>

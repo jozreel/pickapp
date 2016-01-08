@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <meta charset="UTF-8">
+     <link rel="import" href="/polymer/bower_components/dynamic-dropdown/dynamic-dropdown.html">
+		 <link rel="import" href="/polymer/bower_components/paper-item/paper-item.html">
+      <link rel="import" href="/polymer/bower_components/ajax-parser/ajax-req.html">
+       <link rel="import" href="/polymer/bower_components/ajax-parser/ajax-parser.html">
+		 <link rel="import" href="/polymer/bower_components/paper-menu/paper-menu.html">
+		 <link rel="import" href="/polymer/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+		 <link rel="import" href="/polymer/bower_components/paper-input/paper-input.html">
+		 <link rel="import" href="/polymer/bower_components/paper-button/paper-button.html">
+     <link rel="import" href="/polymer/bower_components/paper-icon-button/paper-icon-button.html">
+		 <link rel="import" href="/polymer/bower_components/iron-form/iron-form.html">
+		  <link rel="import" href="/polymer/bower_components/gold-email-input/gold-email-input.html">
+       <link rel="import" href="/style/element-styles.html">
+		 <link rel="stylesheet" href="/style/styles.css">
+		 <title>{{title}}</title>
+	</head>
+<body>
+ <ajax-req dataurl="/static/countries.json" id="countries"> </ajax-req>
+  <ajax-parser jsonurl="/driver/register" id="reg" method="POST"> </ajax-parser>
+<div class="header">
+</div>
+<div class="content">	
+<h1>Subscribe to our service</h1>
+  <form is="iron-form" id ="userform" method="post"  class="smallform">
+	  <fieldset>
+     <legend>You are known as ? </legend>
+	 <span>Your Photo</span>
+	  <paper-input type = "file"  name ="vpic"></paper-input>
+	  <paper-input label="First Name" required auto-validate name="fname"></paper-input>
+      <paper-input label="Last Name" required auto-validate name="lname"></paper-input>
+	   <paper-input label="Alias" required auto-validate name="alias"></paper-input>
+	     <gold-email-input label="Your email adderess" required auto-validate name="email"></gold-email-input>
+	     <paper-input label="Password" required auto-validate name="password" type="password"></paper-input>
+		  <paper-input label="Confirm Password" required auto-validate name="passwordr" type="password"></paper-input>
+	  </fieldset>
+
+  
+ 
+	  <fieldset>
+ <legend>Where are you from ? </legend>
+ <dynamic-dropdown label="Country" id="countrylist" name-value='{"name":"name", "value":"code"}' name="country"></dynamic-dropdown>
+	   <paper-input label="Street" required auto-validate name="street"></paper-input>
+	   <paper-input label="State / Province/ Parish" required auto-validate name="state"></paper-input>
+	     <paper-input label="Town" required auto-validate name="town"></paper-input>
+        <paper-input label="City of Work" required auto-validate name="warea"></paper-input>
+        <dynamic-dropdown label="Main Terminal / Bus Stop" id="bslist" name-value='{"name":"name", "value":"_id"}'></dynamic-dropdown> <paper-icon-button class="<green50></green50>" style="border-radius:20px;" icon="add"></paper-icon-button>
+		   <paper-input label="Final Stop From Central Terminal / Main Bus Stop" required auto-validate name="finalstop"></paper-input>
+	  </fieldset>
+	  <fieldset>
+      <legend>What do you drive ? </legend>
+	  <paper-input label="Vehicle model" required auto-validate name="vmodel"></paper-input>
+      <paper-input label="Vehicle Reg No." required auto-validate name="vregno"></paper-input>
+	   <paper-input label="Short Description" required auto-validate name="vdesc"></paper-input>
+	   <paper-input type = "file" label ="Vehicle Photo" name ="vpic"></paper-input>
+	  </fieldset>
+
+  </form>
+  
+  <div class ="registerbutton"><paper-button class="green500" onclick="register()">Submit and Register</paper-button></div>
+</div>
+<script>
+  document.querySelector('#countries').respfunc = function(doc)
+  {
+    document.querySelector('#countrylist').menuItems = doc;
+    
+    document.querySelector('#countries').dataurl = "/busstops/getallstops/dominica/roseau";
+    document.querySelector('#countries').respfunc = function(docbs){ 
+     
+      document.querySelector('#bslist').menuItems = docbs[0].stops;}
+    
+    
+     
+
+  }
+  function register()
+  {
+    var obj = document.getElementById('userform').serialize();
+    obj.terminal = document.getElementById('bslist').selectedValue;
+    obj.country = document.querySelector('#countrylist').selectedValue;
+     document.querySelector('#reg').respfunc = function(doc)
+     {
+       console.log(doc);
+     }
+      console.log(JSON.stringify(obj));
+      document.querySelector('#reg').jsonstring  = JSON.stringify(obj);
+      document.querySelector('#reg').submit=true;
+     
+  }
+  </script>
+</body>
+</html>

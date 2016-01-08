@@ -5,7 +5,7 @@ home.index = function()
 {
 	var common = require('./common');
 	
-	common.getheaderdetails(this);
+	/*common.getheaderdetails(this);
 	if(! this.req.session.get('login')===true)
 	{
      
@@ -20,6 +20,9 @@ home.index = function()
 	//this.showviews({dyn:'', title:"lang patat"}, this.res);
 	
 	this.loadview('home');
+	*/
+	
+	this.loadview('mapview');
 }
 
 

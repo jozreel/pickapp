@@ -1,0 +1,51 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<dom-module id="dynamic-dropdown">
+<template>
+    <paper-dropdown-menu label="[[label]]" selected-item="{{selectedItem}}">
+   <paper-menu class="dropdown-content"  id= "list">
+    <template is="dom-repeat" items="[[menuItems]]">
+              <paper-item>[[_getarrayItemName(item)]] <input class="valueSelected" type="hidden" value="[[_getItemValue(item)]]" /></paper-item>
+     </template>
+    </paper-menu>
+</paper-dropdown-menu>
+ </template>
+  
+  </dom-module>
+  
+  <script>
+    
+    // TODO fix to reflect selection in fancy list view
+    var tcont ='<td><paper-material>lklk</paper-material>';
+    var dem =new Array();
+    Polymer({
+
+    is: 'dynamic-dropdown',
+
+    properties: {
+      label:String,
+      menuItems:{type:Array, value:[]},
+      nameValue:{type:JSON},
+      selectedItem:{type:Object,observer:'_ich'},selectedValue:Object
+    },
+    _getarrayItemName:function(itm)
+    {
+     
+      var nvs= JSON.parse(this.nameValue);
+      return itm[nvs.name];
+    },
+    _getItemValue:function(item)
+    {
+      var nvs= JSON.stringify(item);
+      return nvs;
+    }
+    ,_ich:function()
+    {
+      ;
+      this.selectedValue = JSON.parse(this.selectedItem.querySelector('.valueSelected').value);
+      
+    }
+    });
+    </script>
